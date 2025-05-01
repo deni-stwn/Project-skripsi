@@ -2,9 +2,7 @@ from flask import Flask , render_template
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = 'your_secret_key'  # Set a secret key for session management
-    app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder to save uploaded files
-    app.config['RESULT_FOLDER'] = 'results'  # Folder to save results
+    app.config.from_object('app.config.Config')  # Load configuration from config.py
     
     @app.route('/')
     def home():

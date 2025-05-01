@@ -1,15 +1,18 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, jsonify
 import os
-from app.services.plagiarism import check_plagiarism
+from app.utils.embedding import get_embeddings_from_folder
+from app.utils.compare import check_plagiarism
 
-monitor_bp = Blueprint("monitor", __name__)
+monitoring_bp = Blueprint('monitoring', __name__)
 
-@monitor_bp.route('/', methods=['GET'])
-def monitor():
-    files = os.listdir(current_app.config['UPLOAD_FOLDER'])
-    return render_template('monitor.html', files=files)
+@monitoring_bp.route('/files', methods=['GET'])
+def list_uploaded_files():
+    folder = os.path.join(os.getcwd(), 'uploads')
+    files = os.listdir(folder)
+    return jsonify({'uploaded_files': files})
 
-@monitor_bp.route('/check', methods=['POST'])
+@monitoring_bp.route('/check', methods=['POST'])
 def check():
-    result = check_plagiarism()
-    return render_template('monitor.html', result=result)
+    embeddings, file_names = get_embeddings_from_folder('uploads')
+    results = check_plagiarism(embeddings, file_names)
+    return jsonify({'plagiarism_results': results})

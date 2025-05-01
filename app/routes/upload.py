@@ -1,19 +1,18 @@
-from flask import Blueprint, request, render_template, redirect, flash
+from flask import Blueprint, request, jsonify, current_app
 import os
-from werkzeug.utils import secure_filename
 
-upload_bp = Blueprint("upload", __name__)
-UPLOAD_FOLDER = 'uploads'
+upload_bp = Blueprint('upload', __name__)
 
-@upload_bp.route('/', methods=['GET', 'POST'])
+@upload_bp.route('/', methods=['POST'])
 def upload_file():
-    if request.method == 'POST':
-        file = request.files['file']
-        if file and file.filename.endswith('.py'):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            flash("✅ File berhasil diupload!", "success")
-            return redirect('/upload')
-        else:
-            flash("❌ Hanya file Python (.py) yang diperbolehkan", "danger")
-    return render_template('upload.html')
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename)
+    os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True)
+    file.save(save_path)
+    return jsonify({'message': f'{file.filename} uploaded successfully'}), 200
