@@ -1,9 +1,14 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template
 import os
 
-upload_bp = Blueprint('upload', __name__)
+upload_routes = Blueprint('upload', __name__)
 
-@upload_bp.route('/', methods=['POST'])
+@upload_routes.route('/', methods=['GET'])
+def upload_page():
+    # Render halaman upload file
+    return render_template('upload.html')
+
+@upload_routes.route('/', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400

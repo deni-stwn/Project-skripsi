@@ -2,7 +2,7 @@ from flask import Flask , render_template
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('app.config.Config')  # Load configuration from config.py
+    app.config.from_object('app.config.Config')  
     
     @app.route('/')
     def home():

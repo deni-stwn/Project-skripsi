@@ -3,10 +3,133 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Monitoring</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
   </head>
   <body>
     <h1>Monitoring</h1>
-    <p>This is a simple Flask application.</p>
+
+    <h2>Uploaded Files</h2>
+    <ul id="file-list">
+      {% for file in files %}
+      <li>{{ file }}</li>
+      {% endfor %}
+    </ul>
+
+    <form id="check-form">
+      <button type="submit">Check Plagiarism</button>
+    </form>
+
+    <form id="reset-form">
+      <button type="button" id="reset-button">Reset</button>
+    </form>
+
+    <h2>Results</h2>
+    <div id="results-section">
+      <table id="results-table" style="display: none">
+        <thead>
+          <tr>
+            <th>File 1</th>
+            <th>File 2</th>
+            <th>Similarity</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p id="no-results-message">
+        No results yet. Click "Check Plagiarism" to start.
+      </p>
+    </div>
+
+    <script>
+      async function checkPlagiarism() {
+        try {
+          const response = await fetch("/monitoring/check", { method: "POST" });
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error:", errorText);
+            alert("An error occurred while checking plagiarism.");
+            return;
+          }
+          const data = await response.json();
+          console.log("Data:", data);
+
+          // Update results table
+          const resultsTable = document.getElementById("results-table");
+          const resultsBody = resultsTable.querySelector("tbody");
+          const noResultsMessage =
+            document.getElementById("no-results-message");
+
+          if (data.results && data.results.length > 0) {
+            resultsBody.innerHTML = ""; // Clear previous results
+            data.results.forEach((result) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${result.file_1}</td>
+                <td>${result.file_2}</td>
+                <td>${result.similarity}</td>
+              `;
+              resultsBody.appendChild(row);
+            });
+            resultsTable.style.display = "table";
+            noResultsMessage.style.display = "none";
+          } else {
+            resultsTable.style.display = "none";
+            noResultsMessage.style.display = "block";
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An unexpected error occurred.");
+        }
+      }
+
+      async function resetData() {
+        try {
+          const response = await fetch("/monitoring/reset", { method: "POST" });
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error:", errorText);
+            alert("An error occurred while resetting data.");
+            return;
+          }
+          alert("Data has been reset successfully.");
+          location.reload(); // Reload the page to reflect changes
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An unexpected error occurred.");
+        }
+      }
+
+      document
+        .getElementById("check-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault(); // Prevent page reload
+          await checkPlagiarism();
+        });
+
+      document
+        .getElementById("reset-button")
+        .addEventListener("click", async () => {
+          await resetData();
+        });
+    </script>
   </body>
 </html>
