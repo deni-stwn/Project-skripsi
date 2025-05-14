@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-body">
+              <h2 class="text-center mb-4">Register</h2>
+              <form id="registerForm" novalidate>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                  />
+                  <div class="invalid-feedback" id="emailError">
+                    Please enter a valid email address.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    required
+                    minlength="6"
+                  />
+                  <div class="invalid-feedback" id="passwordError">
+                    Password must be at least 6 characters long.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="confirmPassword" class="form-label"
+                    >Confirm Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    required
+                  />
+                  <div class="invalid-feedback" id="confirmPasswordError">
+                    Passwords do not match.
+                  </div>
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary">
+                    Register
+                  </button>
+                </div>
+                <div class="text-center mt-3">
+                  <p>
+                    Already have an account?
+                    <a href="/auth/login">Login here</a>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <script>
+      // Your Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDZXH3DM8YTZFjmZO4caSfhUf5KTMna8A4",
+        authDomain: "crud-833c1.firebaseapp.com",
+        databaseURL:
+          "https://crud-833c1-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "crud-833c1",
+        storageBucket: "crud-833c1.firebasestorage.app",
+        messagingSenderId: "512061339186",
+        appId: "1:512061339186:web:b161bf3d4f1c728d88ee2b",
+        measurementId: "G-WS5RS5KZY6",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Form validation function
+      function validateForm() {
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        let isValid = true;
+
+        // Reset previous error states
+        email.classList.remove("is-invalid");
+        password.classList.remove("is-invalid");
+        confirmPassword.classList.remove("is-invalid");
+
+        // Email validation
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email.value)) {
+          email.classList.add("is-invalid");
+          document.getElementById("emailError").textContent =
+            "Please enter a valid email address.";
+          isValid = false;
+        }
+
+        // Password validation
+        if (password.value.length < 6) {
+          password.classList.add("is-invalid");
+          document.getElementById("passwordError").textContent =
+            "Password must be at least 6 characters long.";
+          isValid = false;
+        }
+
+        // Confirm password validation
+        if (password.value !== confirmPassword.value) {
+          confirmPassword.classList.add("is-invalid");
+          document.getElementById("confirmPasswordError").textContent =
+            "Passwords do not match.";
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // Handle registration
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          if (!validateForm()) {
+            return;
+          }
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            // Create user with email and password
+            const userCredential = await firebase
+              .auth()
+              .createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+
+            // Get the ID token
+            const idToken = await user.getIdToken();
+
+            // Send verification email
+            await user.sendEmailVerification();
+
+            // Send the token to your backend
+            const response = await fetch("/auth/register/submit", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: email,
+                password: password, // Tambahkan password ke body request
+                idToken: idToken,
+              }),
+            });
+
+            if (response.ok) {
+              alert(
+                "Registration successful! Please check your email to verify your account."
+              );
+              window.location.href = "/auth/login";
+            } else {
+              const data = await response.json();
+              alert(data.error || "Registration failed");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert(error.message || "Registration failed");
+          }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

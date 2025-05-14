@@ -4,62 +4,121 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monitoring</title>
-    <style>
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      table,
-      th,
-      td {
-        border: 1px solid black;
-      }
-      th,
-      td {
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-    </style>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <h1>Monitoring</h1>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="#">Plagiarism Checker</a>
+        <button id="logout-button" class="btn btn-outline-light">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </div>
+    </nav>
 
-    <h2>Uploaded Files</h2>
-    <ul id="file-list">
-      {% for file in files %}
-      <li>{{ file }}</li>
-      {% endfor %}
-    </ul>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h2 class="card-title">Uploaded Files</h2>
+              <ul class="list-group mt-3 mb-4" id="file-list">
+                {% for file in files %}
+                <li class="list-group-item">
+                  <i class="bi bi-file-text"></i> {{ file }}
+                </li>
+                {% endfor %}
+              </ul>
 
-    <form id="check-form">
-      <button type="submit">Check Plagiarism</button>
-    </form>
+              <div class="d-flex gap-2 mb-4">
+                <form id="check-form" class="d-inline">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Check Plagiarism
+                  </button>
+                </form>
 
-    <form id="reset-form">
-      <button type="button" id="reset-button">Reset</button>
-    </form>
+                <form id="reset-form" class="d-inline">
+                  <button
+                    type="button"
+                    id="reset-button"
+                    class="btn btn-danger"
+                  >
+                    <i class="bi bi-trash"></i> Reset
+                  </button>
+                </form>
+              </div>
 
-    <h2>Results</h2>
-    <div id="results-section">
-      <table id="results-table" style="display: none">
-        <thead>
-          <tr>
-            <th>File 1</th>
-            <th>File 2</th>
-            <th>Similarity</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p id="no-results-message">
-        No results yet. Click "Check Plagiarism" to start.
-      </p>
+              <h2>Results</h2>
+              <div id="results-section">
+                <div class="table-responsive">
+                  <table
+                    id="results-table"
+                    class="table table-striped table-hover"
+                    style="display: none"
+                  >
+                    <thead class="table-dark">
+                      <tr>
+                        <th>File 1</th>
+                        <th>File 2</th>
+                        <th>Similarity</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <p id="no-results-message" class="text-muted">
+                  No results yet. Click "Check Plagiarism" to start.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- Modal for Details -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Comparison Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="modal-content">
+            <!-- Content will be dynamically loaded -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
     <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDZXH3DM8YTZFjmZO4caSfhUf5KTMna8A4",
+        authDomain: "crud-833c1.firebaseapp.com",
+        // ...rest of your firebase config
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
       async function checkPlagiarism() {
         try {
           const response = await fetch("/monitoring/check", { method: "POST" });
@@ -80,12 +139,27 @@
 
           if (data.results && data.results.length > 0) {
             resultsBody.innerHTML = ""; // Clear previous results
-            data.results.forEach((result) => {
+            data.results.forEach((result, index) => {
               const row = document.createElement("tr");
               row.innerHTML = `
                 <td>${result.file_1}</td>
                 <td>${result.file_2}</td>
-                <td>${result.similarity}</td>
+                <td>
+                  <div class="progress">
+                    <div class="progress-bar ${getSimilarityColorClass(
+                      result.similarity
+                    )}" 
+                         role="progressbar" 
+                         style="width: ${result.similarity}%">
+                      ${result.similarity}%
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <button class="btn btn-info btn-sm" onclick="showDetails(${index})">
+                    <i class="bi bi-info-circle"></i> Details
+                  </button>
+                </td>
               `;
               resultsBody.appendChild(row);
             });
@@ -98,6 +172,46 @@
         } catch (error) {
           console.error("Error:", error);
           alert("An unexpected error occurred.");
+        }
+      }
+
+      function getSimilarityColorClass(similarity) {
+        if (similarity >= 75) return "bg-danger";
+        if (similarity >= 50) return "bg-warning";
+        return "bg-success";
+      }
+
+      async function showDetails(index) {
+        try {
+          const response = await fetch(`/monitoring/details/${index}`);
+          const data = await response.json();
+
+          const modalContent = document.getElementById("modal-content");
+          modalContent.innerHTML = `
+            <div class="comparison-details">
+              <h6>File 1: ${data.file_1}</h6>
+              <h6>File 2: ${data.file_2}</h6>
+              <hr>
+              <div class="row">
+                <div class="col-md-6">
+                  <h6>Content 1:</h6>
+                  <pre class="bg-light p-3">${data.content_1}</pre>
+                </div>
+                <div class="col-md-6">
+                  <h6>Content 2:</h6>
+                  <pre class="bg-light p-3">${data.content_2}</pre>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const detailModal = new bootstrap.Modal(
+            document.getElementById("detailModal")
+          );
+          detailModal.show();
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Failed to load details");
         }
       }
 
@@ -129,6 +243,19 @@
         .getElementById("reset-button")
         .addEventListener("click", async () => {
           await resetData();
+        });
+
+      // Logout handler
+      document
+        .getElementById("logout-button")
+        .addEventListener("click", async () => {
+          try {
+            await firebase.auth().signOut();
+            window.location.href = "/auth/login";
+          } catch (error) {
+            console.error("Logout Error:", error);
+            alert("Error logging out");
+          }
         });
     </script>
   </body>
