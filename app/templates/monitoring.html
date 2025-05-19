@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monitoring</title>
+    <title>CodeScan - Monitoring</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,71 +12,672 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
       rel="stylesheet"
     />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css"
+    />
+    <style>
+      :root {
+        --primary: #3c6fdf;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --info: #17a2b8;
+        --dark: #343a40;
+        --light: #f8f9fa;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: linear-gradient(
+          135deg,
+          #4a59df 0%,
+          #3c6fdf 100%
+        ) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 600;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-brand i {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+      }
+
+      .main-container {
+        padding: 30px 15px;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .card-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        border-top-left-radius: 12px !important;
+        border-top-right-radius: 12px !important;
+      }
+
+      .card-body {
+        padding: 25px;
+      }
+
+      .card-title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: var(--dark);
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .card-title::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        width: 50px;
+        background-color: var(--primary);
+      }
+
+      .list-group-item {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 8px;
+        border-radius: 8px !important;
+        transition: all 0.2s;
+      }
+
+      .list-group-item:hover {
+        background-color: #f8faff;
+      }
+
+      .list-group-item i {
+        color: var(--primary);
+        margin-right: 10px;
+      }
+
+      .btn {
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        box-shadow: 0 4px 6px rgba(60, 111, 223, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn-primary:hover {
+        background-color: #345ec5;
+        border-color: #345ec5;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(60, 111, 223, 0.18),
+          0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-danger {
+        box-shadow: 0 4px 6px rgba(220, 53, 69, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(220, 53, 69, 0.18),
+          0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-info {
+        background-color: var(--info);
+        border-color: var(--info);
+        color: white;
+      }
+
+      .btn-info:hover {
+        color: white;
+      }
+
+      .progress {
+        height: 10px;
+        border-radius: 5px;
+        background-color: #e9ecef;
+        margin-top: 5px;
+      }
+
+      .progress-bar {
+        border-radius: 5px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+
+      .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      .table thead th {
+        background-color: var(--primary);
+        color: white;
+        font-weight: 500;
+        border: none;
+        padding: 12px 15px;
+      }
+
+      .table thead th:first-child {
+        border-top-left-radius: 8px;
+      }
+
+      .table thead th:last-child {
+        border-top-right-radius: 8px;
+      }
+
+      .table tbody td {
+        padding: 12px 15px;
+        vertical-align: middle;
+      }
+
+      .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: rgba(60, 111, 223, 0.05);
+      }
+
+      .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        background-color: var(--light);
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      .modal-title {
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .comparison-details pre {
+        border-radius: 8px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      /* Loading animation */
+      .loading {
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .loading-text {
+        color: white;
+        font-weight: 500;
+        margin-top: 15px;
+      }
+
+      /* Custom spinner */
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 4px solid white;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Statistics cards */
+      .stat-card {
+        text-align: center;
+        padding: 15px;
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: var(--primary);
+      }
+
+      .stat-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: var(--secondary);
+        font-size: 0.9rem;
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--secondary);
+      }
+
+      .empty-state i {
+        font-size: 5rem;
+        color: #d1d9e6;
+        margin-bottom: 20px;
+      }
+
+      .empty-state h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      /* Similarity badges */
+      .similarity-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 30px;
+        margin-left: 8px;
+      }
+
+      .badge-high {
+        background-color: rgba(220, 53, 69, 0.15);
+        color: var(--danger);
+      }
+
+      .badge-medium {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #d6a206;
+      }
+
+      .badge-low {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: var(--success);
+      }
+
+      /* Highlight match section */
+      .match-highlight {
+        background-color: rgba(255, 193, 7, 0.2);
+        position: relative;
+        border-radius: 3px;
+        padding: 2px;
+      }
+
+      .match-highlight::before {
+        content: "";
+        position: absolute;
+        left: -2px;
+        top: 0;
+        height: 100%;
+        width: 2px;
+        background-color: var(--warning);
+      }
+
+      /* Code diff styling */
+      .code-diff {
+        display: flex;
+        flex-direction: column;
+        height: 400px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .diff-header {
+        background-color: #f1f1f1;
+        padding: 8px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .diff-header-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .diff-content {
+        flex: 1;
+        overflow: auto;
+        padding: 10px;
+        font-family: "Consolas", "Monaco", "Courier New", monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        white-space: pre;
+        background-color: #1e1e1e;
+        color: #d4d4d4;
+      }
+
+      /* User avatar */
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-right: 10px;
+      }
+
+      /* Animation for cards */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animated-card {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      /* File tag */
+      .file-tag {
+        background-color: rgba(0, 123, 255, 0.1);
+        color: var(--primary);
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-left: 8px;
+      }
+    </style>
   </head>
-  <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <body>
+    <!-- Loading overlay -->
+    <div class="loading">
+      <div class="spinner"></div>
+      <p class="loading-text">Analyzing code similarities...</p>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Plagiarism Checker</a>
-        <button id="logout-button" class="btn btn-outline-light">
-          <i class="bi bi-box-arrow-right"></i> Logout
+        <a class="navbar-brand" href="/">
+          <i class="bi bi-shield-check"></i>
+          <span>CodeScan</span>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/upload/">Upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/monitoring/">Monitoring</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/history/">History</a>
+            </li>
+          </ul>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="user-avatar me-2" id="userInitials">U</div>
+            <div class="dropdown">
+              <a
+                class="text-white text-decoration-none dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <span id="userName">User</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="/profile/"
+                    ><i class="bi bi-person me-2"></i>Profile</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/settings/"
+                    ><i class="bi bi-gear me-2"></i>Settings</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="#" id="logout-button"
+                    ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
 
-    <div class="container mt-4">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h2 class="card-title">Uploaded Files</h2>
-              <ul class="list-group mt-3 mb-4" id="file-list">
-                {% for file in files %}
-                <li class="list-group-item">
-                  <i class="bi bi-file-text"></i> {{ file }}
-                </li>
-                {% endfor %}
-              </ul>
+    <!-- Main Content -->
+    <div class="main-container">
+      <div class="container">
+        <!-- Statistics Row -->
+        <div class="row mb-4" data-aos="fade-up">
+          <div class="col-md-3 mb-4">
+            <div class="stat-card">
+              <i class="bi bi-file-earmark-code stat-icon"></i>
+              <div class="stat-number" id="filesCount">{{ files|length }}</div>
+              <div class="stat-label">Files Uploaded</div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="stat-card">
+              <i class="bi bi-clipboard-check stat-icon"></i>
+              <div class="stat-number" id="comparisonCount">0</div>
+              <div class="stat-label">Comparisons</div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="stat-card">
+              <i class="bi bi-exclamation-triangle stat-icon text-warning"></i>
+              <div class="stat-number" id="highSimilarityCount">0</div>
+              <div class="stat-label">High Similarity</div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="stat-card">
+              <i class="bi bi-clock-history stat-icon"></i>
+              <div class="stat-number" id="scanTime">0</div>
+              <div class="stat-label">Scan Time (s)</div>
+            </div>
+          </div>
+        </div>
 
-              <div class="d-flex gap-2 mb-4">
-                <form id="check-form" class="d-inline">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Check Plagiarism
-                  </button>
-                </form>
-
-                <form id="reset-form" class="d-inline">
-                  <button
-                    type="button"
-                    id="reset-button"
-                    class="btn btn-danger"
-                  >
-                    <i class="bi bi-trash"></i> Reset
-                  </button>
-                </form>
+        <!-- Files Card -->
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="card animated-card" data-aos="fade-up">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">
+                  <i class="bi bi-files me-2"></i> Uploaded Files
+                </h5>
+                <a href="/upload/" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-plus"></i> Add Files
+                </a>
               </div>
-
-              <h2>Results</h2>
-              <div id="results-section">
-                <div class="table-responsive">
-                  <table
-                    id="results-table"
-                    class="table table-striped table-hover"
-                    style="display: none"
+              <div class="card-body">
+                {% if files %}
+                <ul class="list-group mt-3 mb-4" id="file-list">
+                  {% for file in files %}
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
                   >
-                    <thead class="table-dark">
-                      <tr>
-                        <th>File 1</th>
-                        <th>File 2</th>
-                        <th>Similarity</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody></tbody>
-                  </table>
+                    <div>
+                      <i class="bi bi-file-earmark-code"></i>
+                      <span>{{ file }}</span>
+                      <span class="file-tag">python</span>
+                    </div>
+                    <div>
+                      <button
+                        class="btn btn-sm btn-outline-secondary view-file-btn"
+                        data-filename="{{ file }}"
+                      >
+                        <i class="bi bi-eye"></i> View
+                      </button>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% else %}
+                <div class="empty-state">
+                  <i class="bi bi-file-earmark-x"></i>
+                  <h4>No Files Uploaded</h4>
+                  <p>Upload Python files to begin plagiarism detection</p>
+                  <a href="/upload/" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Upload Files
+                  </a>
                 </div>
-                <p id="no-results-message" class="text-muted">
-                  No results yet. Click "Check Plagiarism" to start.
-                </p>
+                {% endif %}
+
+                <div class="d-flex gap-2 mb-4">
+                  <form id="check-form" class="d-inline">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-search"></i> Check Plagiarism
+                    </button>
+                  </form>
+
+                  <form id="reset-form" class="d-inline">
+                    <button
+                      type="button"
+                      id="reset-button"
+                      class="btn btn-danger"
+                    >
+                      <i class="bi bi-trash"></i> Reset
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Card -->
+        <div class="row">
+          <div class="col-md-12">
+            <div
+              class="card animated-card"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">
+                  <i class="bi bi-bar-chart-line me-2"></i> Plagiarism Results
+                </h5>
+                <div class="btn-group">
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    id="exportCSVBtn"
+                  >
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Export CSV
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    id="exportPDFBtn"
+                  >
+                    <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="results-section">
+                  <div class="table-responsive">
+                    <table
+                      id="results-table"
+                      class="table table-striped table-hover"
+                      style="display: none"
+                    >
+                      <thead>
+                        <tr>
+                          <th>File 1</th>
+                          <th>File 2</th>
+                          <th>Similarity</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                  <div id="no-results-message" class="empty-state">
+                    <i class="bi bi-search"></i>
+                    <h4>No Results Yet</h4>
+                    <p>
+                      Click "Check Plagiarism" to start analyzing your files
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -86,10 +687,12 @@
 
     <!-- Modal for Details -->
     <div class="modal fade" id="detailModal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Comparison Details</h5>
+            <h5 class="modal-title">
+              <i class="bi bi-code-slash me-2"></i>Code Comparison
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -99,6 +702,44 @@
           <div class="modal-body" id="modal-content">
             <!-- Content will be dynamically loaded -->
           </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="downloadReportBtn"
+            >
+              <i class="bi bi-download"></i> Download Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Preview Modal -->
+    <div class="modal fade" id="filePreviewModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-file-earmark-code me-2"></i
+              ><span id="previewFileName"></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <pre><code class="python" id="fileContent"></code></pre>
+          </div>
         </div>
       </div>
     </div>
@@ -107,156 +748,635 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
 
     <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+      });
+
       // Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyDZXH3DM8YTZFjmZO4caSfhUf5KTMna8A4",
         authDomain: "crud-833c1.firebaseapp.com",
-        // ...rest of your firebase config
+        databaseURL:
+          "https://crud-833c1-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "crud-833c1",
+        storageBucket: "crud-833c1.firebasestorage.app",
+        messagingSenderId: "512061339186",
+        appId: "1:512061339186:web:b161bf3d4f1c728d88ee2b",
+        measurementId: "G-WS5RS5KZY6",
       };
 
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
 
+      // Get user info and update UI
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          // User is signed in
+          const displayName =
+            user.displayName || user.email?.split("@")[0] || "User";
+          document.getElementById("userName").textContent = displayName;
+
+          // Set initials for avatar
+          let initials = displayName.charAt(0).toUpperCase();
+          if (displayName.includes(" ")) {
+            initials =
+              displayName.charAt(0) + displayName.split(" ")[1].charAt(0);
+          }
+          document.getElementById("userInitials").textContent = initials;
+        } else {
+          // Redirect to login if not signed in
+          window.location.href = "/auth/login";
+        }
+      });
+
+      let loading = false;
+      const loadingComponent = document.querySelector(".loading");
+      let resultsData = [];
+      let startTime;
+
       async function checkPlagiarism() {
         try {
+          // Record start time for performance timing
+          startTime = performance.now();
+
+          loading = true;
+          loadingComponent.style.display = "flex";
+
           const response = await fetch("/monitoring/check", { method: "POST" });
+
           if (!response.ok) {
             const errorText = await response.text();
             console.error("Error:", errorText);
-            alert("An error occurred while checking plagiarism.");
+            showToast("An error occurred while checking plagiarism.", "danger");
             return;
           }
+
           const data = await response.json();
           console.log("Data:", data);
+          resultsData = data.results || [];
+
+          // Update statistics
+          const endTime = performance.now();
+          const scanTimeSeconds = ((endTime - startTime) / 1000).toFixed(2);
+          document.getElementById("scanTime").textContent = scanTimeSeconds;
+          document.getElementById("comparisonCount").textContent =
+            resultsData.length;
+
+          // Count high similarity items (>=75%)
+          const highSimilarityCount = resultsData.filter(
+            (result) => parseFloat(result.similarity) >= 75
+          ).length;
+          document.getElementById("highSimilarityCount").textContent =
+            highSimilarityCount;
 
           // Update results table
-          const resultsTable = document.getElementById("results-table");
-          const resultsBody = resultsTable.querySelector("tbody");
-          const noResultsMessage =
-            document.getElementById("no-results-message");
-
-          if (data.results && data.results.length > 0) {
-            resultsBody.innerHTML = ""; // Clear previous results
-            data.results.forEach((result, index) => {
-              const row = document.createElement("tr");
-              row.innerHTML = `
-                <td>${result.file_1}</td>
-                <td>${result.file_2}</td>
-                <td>
-                  <div class="progress">
-                    <div class="progress-bar ${getSimilarityColorClass(
-                      result.similarity
-                    )}" 
-                         role="progressbar" 
-                         style="width: ${result.similarity}%">
-                      ${result.similarity}%
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <button class="btn btn-info btn-sm" onclick="showDetails(${index})">
-                    <i class="bi bi-info-circle"></i> Details
-                  </button>
-                </td>
-              `;
-              resultsBody.appendChild(row);
-            });
-            resultsTable.style.display = "table";
-            noResultsMessage.style.display = "none";
-          } else {
-            resultsTable.style.display = "none";
-            noResultsMessage.style.display = "block";
-          }
+          updateResultsTable();
         } catch (error) {
           console.error("Error:", error);
-          alert("An unexpected error occurred.");
+          showToast("An unexpected error occurred.", "danger");
+        } finally {
+          loading = false;
+          loadingComponent.style.display = "none";
+        }
+      }
+
+      function updateResultsTable() {
+        const resultsTable = document.getElementById("results-table");
+        const resultsBody = resultsTable.querySelector("tbody");
+        const noResultsMessage = document.getElementById("no-results-message");
+
+        if (resultsData && resultsData.length > 0) {
+          resultsBody.innerHTML = ""; // Clear previous results
+
+          resultsData.forEach((result, index) => {
+            const similarityValue = parseFloat(result.similarity).toFixed(2);
+            const row = document.createElement("tr");
+
+            // Create similarity badge
+            let badgeClass = "badge-low";
+            if (similarityValue >= 75) {
+              badgeClass = "badge-high";
+            } else if (similarityValue >= 50) {
+              badgeClass = "badge-medium";
+            }
+
+            row.innerHTML = `
+            <td>
+              ${result.file_1}
+              <button class="btn btn-sm btn-link p-0 ms-2 view-file-btn" data-filename="${
+                result.file_1
+              }">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+            </td>
+            <td>
+              ${result.file_2}
+              <button class="btn btn-sm btn-link p-0 ms-2 view-file-btn" data-filename="${
+                result.file_2
+              }">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="progress flex-grow-1">
+                  <div class="progress-bar ${getSimilarityColorClass(
+                    similarityValue
+                  )}" 
+                       role="progressbar" 
+                       style="width: ${similarityValue}%">
+                  </div>
+                </div>
+                <span class="ms-2">${similarityValue}%</span>
+                <span class="similarity-badge ${badgeClass}">
+                  ${getSimilarityLabel(similarityValue)}
+                </span>
+              </div>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-info" onclick="showDetails(${index})">
+                <i class="bi bi-code-slash"></i> Compare
+              </button>
+            </td>
+          `;
+
+            resultsBody.appendChild(row);
+          });
+
+          resultsTable.style.display = "table";
+          noResultsMessage.style.display = "none";
+
+          // Add event listeners to view file buttons
+          document.querySelectorAll(".view-file-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+              const filename = this.getAttribute("data-filename");
+              viewFileContent(filename);
+            });
+          });
+        } else {
+          resultsTable.style.display = "none";
+          noResultsMessage.style.display = "block";
         }
       }
 
       function getSimilarityColorClass(similarity) {
+        similarity = parseFloat(similarity);
         if (similarity >= 75) return "bg-danger";
         if (similarity >= 50) return "bg-warning";
         return "bg-success";
       }
 
+      function getSimilarityLabel(similarity) {
+        similarity = parseFloat(similarity);
+        if (similarity >= 75) return "High";
+        if (similarity >= 50) return "Medium";
+        return "Low";
+      }
+
+      // View file content function
+      async function viewFileContent(filename) {
+        try {
+          loading = true;
+          loadingComponent.style.display = "flex";
+
+          const response = await fetch(
+            `/monitoring/file/${encodeURIComponent(filename)}`
+          );
+
+          if (!response.ok) {
+            throw new Error("File not found");
+          }
+
+          const data = await response.json();
+          const fileContentElement = document.getElementById("fileContent");
+          fileContentElement.textContent = data.content;
+          document.getElementById("previewFileName").textContent = filename;
+
+          // Use highlight.js to format the code
+          hljs.highlightElement(fileContentElement);
+
+          const filePreviewModal = new bootstrap.Modal(
+            document.getElementById("filePreviewModal")
+          );
+          filePreviewModal.show();
+        } catch (error) {
+          console.error("Error:", error);
+          showToast("Failed to load file content", "danger");
+        } finally {
+          loading = false;
+          loadingComponent.style.display = "none";
+        }
+      }
+
+      // showDetails function to display comparison details in a modal
       async function showDetails(index) {
         try {
+          loading = true;
+          loadingComponent.style.display = "flex";
+
           const response = await fetch(`/monitoring/details/${index}`);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error:", errorText);
+            throw new Error("Failed to load comparison details");
+          }
+
           const data = await response.json();
+          console.log("Comparison details:", data);
 
           const modalContent = document.getElementById("modal-content");
+
+          // Calculate similarity percentage from the data
+          const similarityValue = parseFloat(data.similarity).toFixed(2);
+          let severityClass = "text-success";
+          let severityText = "Low";
+
+          if (similarityValue >= 75) {
+            severityClass = "text-danger";
+            severityText = "High";
+          } else if (similarityValue >= 50) {
+            severityClass = "text-warning";
+            severityText = "Medium";
+          }
+
           modalContent.innerHTML = `
-            <div class="comparison-details">
-              <h6>File 1: ${data.file_1}</h6>
-              <h6>File 2: ${data.file_2}</h6>
-              <hr>
+        <div class="mb-4">
+          <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <div>
+              <strong>Similarity Analysis:</strong> ${similarityValue}% similarity detected - <span class="${severityClass}">${severityText} Risk of Plagiarism</span>
+            </div>
+          </div>
+          
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6>File 1: <span class="text-primary">${data.file_1}</span></h6>
+            </div>
+            <div class="col-md-6">
+              <h6>File 2: <span class="text-primary">${data.file_2}</span></h6>
+            </div>
+          </div>
+          
+          <ul class="nav nav-tabs mb-3" id="comparisonTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="sideBySide-tab" data-bs-toggle="tab" data-bs-target="#sideBySide-tab-pane" type="button" role="tab">Side by Side</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="unified-tab" data-bs-toggle="tab" data-bs-target="#unified-tab-pane" type="button" role="tab">Unified Diff</button>
+            </li>
+          </ul>
+          
+          <div class="tab-content" id="comparisonTabsContent">
+            <div class="tab-pane fade show active" id="sideBySide-tab-pane" role="tabpanel" aria-labelledby="sideBySide-tab" tabindex="0">
               <div class="row">
                 <div class="col-md-6">
-                  <h6>Content 1:</h6>
-                  <pre class="bg-light p-3">${data.content_1}</pre>
+                  <div class="code-diff">
+                    <div class="diff-header">
+                      <span class="diff-header-title">${data.file_1}</span>
+                    </div>
+                    <div class="diff-content">
+                      <pre><code class="python">${highlightSimilarities(
+                        data.content_1,
+                        data.matching_blocks
+                      )}</code></pre>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <h6>Content 2:</h6>
-                  <pre class="bg-light p-3">${data.content_2}</pre>
+                  <div class="code-diff">
+                    <div class="diff-header">
+                      <span class="diff-header-title">${data.file_2}</span>
+                    </div>
+                    <div class="diff-content">
+                      <pre><code class="python">${highlightSimilarities(
+                        data.content_2,
+                        data.matching_blocks
+                      )}</code></pre>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          `;
+            <div class="tab-pane fade" id="unified-tab-pane" role="tabpanel" aria-labelledby="unified-tab" tabindex="0">
+              <div class="code-diff">
+                <div class="diff-header">
+                  <span class="diff-header-title">Differences Highlighted</span>
+                </div>
+                <div class="diff-content">
+                  <pre><code class="python">${generateUnifiedDiff(
+                    data.content_1,
+                    data.content_2,
+                    data.matching_blocks
+                  )}</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-12">
+            <h5 class="mb-3">Similarity Details</h5>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Overall Similarity
+                <span class="badge bg-primary rounded-pill">${similarityValue}%</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Matching Lines
+                <span class="badge bg-primary rounded-pill">${
+                  data.matching_blocks?.length || 0
+                }</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Lines (File 1)
+                <span class="badge bg-secondary rounded-pill">${
+                  data.content_1?.split("\n").length || 0
+                }</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Lines (File 2)
+                <span class="badge bg-secondary rounded-pill">${
+                  data.content_2?.split("\n").length || 0
+                }</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      `;
 
+          // Show the modal
           const detailModal = new bootstrap.Modal(
             document.getElementById("detailModal")
           );
           detailModal.show();
+
+          // After modal is shown, highlight code blocks
+          document.querySelectorAll("pre code").forEach((block) => {
+            hljs.highlightElement(block);
+          });
         } catch (error) {
           console.error("Error:", error);
-          alert("Failed to load details");
+          showToast("Failed to load comparison details", "danger");
+        } finally {
+          loading = false;
+          loadingComponent.style.display = "none";
         }
+      }
+
+      // Improved version of the highlightSimilarities function
+      function highlightSimilarities(content, matchingBlocks) {
+        if (!content || !matchingBlocks || matchingBlocks.length === 0)
+          return content;
+
+        const lines = content.split("\n");
+        const highlightedLines = [...lines];
+
+        // Create a set of matching line numbers for quick lookup
+        const matchingLineNumbers = new Set();
+        matchingBlocks.forEach((block) => {
+          for (let i = 0; i < block.length; i++) {
+            const lineNum =
+              block.file1_line !== undefined
+                ? block.file1_line + i
+                : block.start + i;
+            matchingLineNumbers.add(lineNum);
+          }
+        });
+
+        // Highlight each matching line
+        for (let i = 0; i < highlightedLines.length; i++) {
+          if (matchingLineNumbers.has(i)) {
+            highlightedLines[
+              i
+            ] = `<span class="match-highlight">${highlightedLines[i]}</span>`;
+          }
+        }
+
+        return highlightedLines.join("\n");
+      }
+
+      // Generate a unified diff view
+      function generateUnifiedDiff(content1, content2, matchingBlocks) {
+        if (!content1 || !content2) return "Unable to generate diff view";
+
+        const lines1 = content1.split("\n");
+        const lines2 = content2.split("\n");
+
+        // Map of matching line numbers for quick lookup
+        const matchingLines = new Map();
+        matchingBlocks.forEach((block) => {
+          if (
+            block.file1_line !== undefined &&
+            block.file2_line !== undefined
+          ) {
+            matchingLines.set(block.file1_line, block.file2_line);
+          }
+        });
+
+        let diffOutput = [];
+        diffOutput.push("--- File 1");
+        diffOutput.push("+++ File 2");
+        diffOutput.push("");
+
+        // Simple diff generation (in a real app, use a proper diff algorithm)
+        let i = 0,
+          j = 0;
+        while (i < lines1.length || j < lines2.length) {
+          if (
+            i < lines1.length &&
+            j < lines2.length &&
+            ((matchingLines.has(i) && matchingLines.get(i) === j) ||
+              lines1[i] === lines2[j])
+          ) {
+            // Matching lines
+            diffOutput.push(" " + lines1[i]);
+            i++;
+            j++;
+          } else if (
+            i < lines1.length &&
+            (!matchingLines.has(i) || j >= lines2.length)
+          ) {
+            // Line only in file 1
+            diffOutput.push("-" + lines1[i]);
+            i++;
+          } else if (j < lines2.length) {
+            // Line only in file 2
+            diffOutput.push("+" + lines2[j]);
+            j++;
+          }
+        }
+
+        return diffOutput.join("\n");
+      }
+      // Toast notification
+      function showToast(message, type) {
+        // Create toast container if it doesn't exist
+        let toastContainer = document.getElementById("toast-container");
+        if (!toastContainer) {
+          toastContainer = document.createElement("div");
+          toastContainer.id = "toast-container";
+          toastContainer.className =
+            "toast-container position-fixed bottom-0 end-0 p-3";
+          document.body.appendChild(toastContainer);
+        }
+
+        // Create a unique ID for the toast
+        const toastId = "toast-" + Date.now();
+
+        // Create toast HTML
+        const toast = document.createElement("div");
+        toast.id = toastId;
+        toast.className = `toast align-items-center text-white bg-${type} border-0`;
+        toast.role = "alert";
+        toast.setAttribute("aria-live", "assertive");
+        toast.setAttribute("aria-atomic", "true");
+
+        toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+
+        toastContainer.appendChild(toast);
+
+        // Initialize and show the toast
+        const toastElement = new bootstrap.Toast(toast, {
+          autohide: true,
+          delay: 5000,
+        });
+        toastElement.show();
+
+        // Remove the toast element after it's hidden
+        toast.addEventListener("hidden.bs.toast", function () {
+          this.remove();
+        });
       }
 
       async function resetData() {
-        try {
-          const response = await fetch("/monitoring/reset", { method: "POST" });
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Error:", errorText);
-            alert("An error occurred while resetting data.");
-            return;
+        if (
+          confirm(
+            "Are you sure you want to reset all data? This will delete all uploaded files and results."
+          )
+        ) {
+          try {
+            loading = true;
+            loadingComponent.style.display = "flex";
+
+            const response = await fetch("/monitoring/reset", {
+              method: "POST",
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error("Error:", errorText);
+              showToast("An error occurred while resetting data.", "danger");
+              return;
+            }
+
+            showToast("Data has been reset successfully.", "success");
+            setTimeout(() => {
+              location.reload(); // Reload the page to reflect changes
+            }, 1000);
+          } catch (error) {
+            console.error("Error:", error);
+            showToast("An unexpected error occurred.", "danger");
+          } finally {
+            loading = false;
+            loadingComponent.style.display = "none";
           }
-          alert("Data has been reset successfully.");
-          location.reload(); // Reload the page to reflect changes
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An unexpected error occurred.");
         }
       }
 
-      document
-        .getElementById("check-form")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault(); // Prevent page reload
-          await checkPlagiarism();
+      // Export functions (placeholder implementations)
+      function exportToCSV() {
+        if (!resultsData || resultsData.length === 0) {
+          showToast("No results to export", "warning");
+          return;
+        }
+
+        showToast("Exporting to CSV...", "info");
+        // Here you would implement the CSV export functionality
+      }
+
+      function exportToPDF() {
+        if (!resultsData || resultsData.length === 0) {
+          showToast("No results to export", "warning");
+          return;
+        }
+
+        showToast("Exporting to PDF...", "info");
+        // Here you would implement the PDF export functionality
+      }
+
+      // Event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set up event listeners once DOM is loaded
+        document
+          .getElementById("check-form")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault(); // Prevent page reload
+            await checkPlagiarism();
+          });
+
+        document
+          .getElementById("reset-button")
+          .addEventListener("click", async () => {
+            await resetData();
+          });
+
+        document
+          .getElementById("exportCSVBtn")
+          .addEventListener("click", () => {
+            exportToCSV();
+          });
+
+        document
+          .getElementById("exportPDFBtn")
+          .addEventListener("click", () => {
+            exportToPDF();
+          });
+
+        document
+          .getElementById("downloadReportBtn")
+          .addEventListener("click", () => {
+            showToast("Downloading report...", "info");
+            // Implement report download functionality here
+          });
+
+        // Set up view file buttons
+        document.querySelectorAll(".view-file-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const filename = this.getAttribute("data-filename");
+            viewFileContent(filename);
+          });
         });
 
-      document
-        .getElementById("reset-button")
-        .addEventListener("click", async () => {
-          await resetData();
-        });
-
-      // Logout handler
-      document
-        .getElementById("logout-button")
-        .addEventListener("click", async () => {
-          try {
-            await firebase.auth().signOut();
-            window.location.href = "/auth/login";
-          } catch (error) {
-            console.error("Logout Error:", error);
-            alert("Error logging out");
-          }
-        });
+        // Logout handler
+        document
+          .getElementById("logout-button")
+          .addEventListener("click", async () => {
+            try {
+              await firebase.auth().signOut();
+              window.location.href = "/auth/login";
+            } catch (error) {
+              console.error("Logout Error:", error);
+              showToast("Error logging out", "danger");
+            }
+          });
+      });
     </script>
   </body>
 </html>

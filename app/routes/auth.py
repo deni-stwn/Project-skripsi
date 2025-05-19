@@ -13,13 +13,10 @@ def register():
     email = data.get('email')
     password = data.get('password')
     
-    if not email or not password:
-        return jsonify({'error': 'Email and password are required'}), 400
-    
     user_id = create_user(email, password)
-    if user_id:
-        return jsonify({'message': 'User created successfully', 'user_id': user_id}), 201
-    return jsonify({'error': 'Failed to create user'}), 400
+    return jsonify({'message': 'User created successfully', 'user_id': user_id}), 201
+    # if user_id:
+    # return jsonify({'error': 'Failed to create user'}), 400
 
 @auth_bp.route('/login', methods=['GET'])
 def login_page():

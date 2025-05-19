@@ -3,47 +3,1239 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload File</title>
+    <title>CodeScan - Upload Files</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <style>
+      :root {
+        --primary: #3c6fdf;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --info: #17a2b8;
+        --dark: #343a40;
+        --light: #f8f9fa;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: linear-gradient(
+          135deg,
+          #4a59df 0%,
+          #3c6fdf 100%
+        ) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 600;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-brand i {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+      }
+
+      .main-container {
+        padding: 30px 15px;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        margin-bottom: 25px;
+      }
+
+      .card:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .card-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        border-top-left-radius: 12px !important;
+        border-top-right-radius: 12px !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-body {
+        padding: 25px;
+      }
+
+      .card-title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: var(--dark);
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .card-title::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        width: 50px;
+        background-color: var(--primary);
+      }
+
+      .upload-area {
+        border: 2px dashed #c8d1e6;
+        border-radius: 16px;
+        padding: 40px 20px;
+        text-align: center;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .upload-area:hover,
+      .upload-area.drag-over {
+        background-color: #edf2ff;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+      }
+
+      .upload-area::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, var(--primary), #6b8cef);
+        opacity: 0;
+        transition: opacity 0.3s;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+      }
+
+      .upload-area.drag-over::before {
+        opacity: 1;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .upload-icon {
+        font-size: 64px;
+        margin-bottom: 15px;
+        color: var(--primary);
+        opacity: 0.8;
+        transition: transform 0.3s;
+      }
+
+      .upload-area:hover .upload-icon {
+        transform: translateY(-5px);
+      }
+
+      .progress-container {
+        margin: 25px 0;
+        display: none;
+      }
+
+      .file-info {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        display: none;
+      }
+
+      .file-info.show {
+        display: block;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .btn {
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        box-shadow: 0 4px 6px rgba(60, 111, 223, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn-primary:hover {
+        background-color: #345ec5;
+        border-color: #345ec5;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(60, 111, 223, 0.18),
+          0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-success {
+        box-shadow: 0 4px 6px rgba(40, 167, 69, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(40, 167, 69, 0.18),
+          0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .progress {
+        height: 10px;
+        border-radius: 5px;
+        background-color: #e9ecef;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        border-radius: 5px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: linear-gradient(90deg, var(--primary), #5f7ee6);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .list-group-item {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 8px;
+        border-radius: 8px !important;
+        transition: all 0.2s;
+        padding: 12px 16px;
+      }
+
+      .list-group-item:hover {
+        background-color: #f8faff;
+      }
+
+      .file-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 30px;
+      }
+
+      .file-badge.python {
+        background-color: rgba(60, 111, 223, 0.1);
+        color: var(--primary);
+      }
+
+      .file-badge.zip {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: var(--success);
+      }
+
+      .file-row-icon {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        color: var(--primary);
+      }
+
+      .btn-icon {
+        height: 32px;
+        width: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: rgba(0, 0, 0, 0.05);
+        color: var(--dark);
+        transition: all 0.2s;
+      }
+
+      .btn-icon:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: var(--primary);
+      }
+
+      /* User avatar */
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-right: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+      }
+
+      .file-type-icon {
+        font-size: 1.8rem;
+        margin-right: 12px;
+      }
+
+      .result-container {
+        display: none;
+        margin-top: 25px;
+      }
+
+      .result-container.show {
+        display: block;
+        animation: fadeIn 0.5s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .file-count-badge {
+        background-color: rgba(60, 111, 223, 0.1);
+        color: var(--primary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 30px;
+      }
+
+      .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        display: inline-block;
+        padding: 15px;
+        border-radius: 50%;
+        color: var(--primary);
+        background-color: rgba(60, 111, 223, 0.1);
+      }
+
+      .steps-container {
+        counter-reset: step-counter;
+      }
+
+      .step-item {
+        position: relative;
+        padding-left: 60px;
+        margin-bottom: 30px;
+      }
+
+      .step-item::before {
+        content: counter(step-counter);
+        counter-increment: step-counter;
+        width: 42px;
+        height: 42px;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        font-weight: 600;
+        position: absolute;
+        left: 0;
+        top: 0;
+        box-shadow: 0 3px 6px rgba(60, 111, 223, 0.2);
+      }
+
+      .step-title {
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+
+      .step-description {
+        color: var(--secondary);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      footer {
+        background-color: #ffffff;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px 0;
+        margin-top: 40px;
+      }
+
+      /* Tooltip styling */
+      .tooltip-inner {
+        background-color: var(--dark);
+        max-width: 200px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+      }
+    </style>
   </head>
   <body>
-    <h1>Upload File</h1>
-    <form
-      id="upload-form"
-      action="/upload/"
-      method="post"
-      enctype="multipart/form-data"
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="bi bi-shield-check"></i>
+          <span>CodeScan</span>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/upload/">Upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/monitoring/">Monitoring</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/history/">History</a>
+            </li>
+          </ul>
+
+          <div class="ms-auto d-flex align-items-center">
+            <div class="user-avatar me-2" id="userInitials">U</div>
+            <div class="dropdown">
+              <a
+                class="text-white text-decoration-none dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <span id="userName">User</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="/profile/"
+                    ><i class="bi bi-person me-2"></i>Profile</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/settings/"
+                    ><i class="bi bi-gear me-2"></i>Settings</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="#" id="logout-button"
+                    ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8" data-aos="fade-up">
+            <!-- Upload Card -->
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-cloud-upload me-2"></i> Upload Files
+                </h5>
+                <span class="file-count-badge" id="file-count-badge"
+                  >{{ files|length }} files</span
+                >
+              </div>
+              <div class="card-body">
+                <div class="alert alert-info mb-4">
+                  <div class="d-flex">
+                    <i class="bi bi-info-circle me-3 fs-4"></i>
+                    <div>
+                      <strong>Supported formats:</strong>
+                      <p class="mb-0">
+                        You can upload individual Python (.py) files or a ZIP
+                        archive containing multiple Python files.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <form
+                  id="upload-form"
+                  method="post"
+                  enctype="multipart/form-data"
+                >
+                  <div class="upload-area" id="drop-area">
+                    <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                    <h4 class="mb-3">Drag & Drop files here</h4>
+                    <p class="text-muted">or</p>
+                    <button
+                      type="button"
+                      class="btn btn-primary px-4"
+                      id="browse-button"
+                    >
+                      <i class="bi bi-folder"></i> Browse Files
+                    </button>
+                    <input
+                      type="file"
+                      id="file"
+                      name="file"
+                      class="file-input"
+                      accept=".py,.zip"
+                      required
+                      multiple
+                    />
+
+                    <div class="mt-3 text-muted small">
+                      <span class="d-block mb-1">Maximum file size: 10MB</span>
+                      <span>Accepted file types: .py, .zip</span>
+                    </div>
+                  </div>
+
+                  <div class="file-info" id="file-info">
+                    <!-- File info will be populated here -->
+                  </div>
+
+                  <div class="progress-container" id="progress-container">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-muted" id="progress-text"
+                        >Uploading...</span
+                      >
+                      <span id="progress-percentage">0%</span>
+                    </div>
+                    <div class="progress">
+                      <div
+                        id="progress-bar"
+                        class="progress-bar progress-bar-striped progress-bar-animated"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div class="d-grid gap-2 mt-4">
+                    <button
+                      type="submit"
+                      class="btn btn-success"
+                      id="upload-button"
+                    >
+                      <i class="bi bi-upload"></i> Upload Files
+                    </button>
+                  </div>
+                </form>
+
+                <div id="result-container" class="result-container">
+                  <!-- Result message will appear here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Files Card -->
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-files me-2"></i> Recent Files
+                </h5>
+                <a
+                  href="/monitoring/"
+                  class="btn btn-sm btn-outline-primary"
+                  data-bs-toggle="tooltip"
+                  title="View all files and results"
+                >
+                  <i class="bi bi-bar-chart-line"></i> Monitoring
+                </a>
+              </div>
+              <div class="card-body p-0">
+                <ul class="list-group list-group-flush" id="recent-files">
+                  <li class="list-group-item text-center text-muted">
+                    <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                    No files uploaded yet
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <!-- Instructions Card -->
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-info-circle me-2"></i> How It Works
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="text-center mb-4">
+                  <div class="feature-icon" style="width: 90px; height: 90px">
+                    <i class="bi bi-shield-check"></i>
+                  </div>
+                  <h5>Python Code Plagiarism Checker</h5>
+                  <p class="text-muted">
+                    A powerful tool to detect similarities between Python code
+                    files
+                  </p>
+                </div>
+
+                <div class="steps-container">
+                  <div class="step-item">
+                    <div class="step-title">Upload Files</div>
+                    <div class="step-description">
+                      Upload individual Python files or a ZIP archive containing
+                      multiple files.
+                    </div>
+                  </div>
+
+                  <div class="step-item">
+                    <div class="step-title">Code Analysis</div>
+                    <div class="step-description">
+                      Our system automatically analyzes the code structure and
+                      patterns to identify similarities.
+                    </div>
+                  </div>
+
+                  <div class="step-item">
+                    <div class="step-title">View Results</div>
+                    <div class="step-description">
+                      Check the monitoring page to see detailed comparison
+                      results and similarity percentages.
+                    </div>
+                  </div>
+
+                  <div class="step-item">
+                    <div class="step-title">Generate Reports</div>
+                    <div class="step-description">
+                      Export detailed reports showing matching code segments and
+                      statistics.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="bi bi-lightbulb me-2"></i> Pro Tips
+                </h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <i class="bi bi-check-circle text-success me-2"></i>
+                    ZIP files should only contain Python (.py) files
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-check-circle text-success me-2"></i>
+                    Each file should be named uniquely for better identification
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-check-circle text-success me-2"></i>
+                    For best results, ensure code is syntactically correct
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-check-circle text-success me-2"></i>
+                    The system can detect similarities even when variables are
+                    renamed
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menambahkan modal untuk menampilkan konten file -->
+    <div
+      class="modal fade"
+      id="fileViewerModal"
+      tabindex="-1"
+      aria-labelledby="fileViewerModalLabel"
+      aria-hidden="true"
     >
-      <label for="file">Choose a file:</label>
-      <input type="file" id="file" name="file" required />
-      <button type="submit">Upload</button>
-    </form>
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="fileViewerModalLabel">File Viewer</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="file-viewer-content">
+              <pre><code class="language-python" id="fileContent">Loading...</code></pre>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="d-flex align-items-center">
+              <i
+                class="bi bi-shield-check me-2"
+                style="color: var(--primary); font-size: 1.5rem"
+              ></i>
+              <span class="fw-bold">CodeScan</span>
+            </div>
+            <p class="text-muted small mt-2">
+              Plagiarism detection system for Python code
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="text-muted small">
+              <p class="mb-1">&copy; 2025 CodeScan - All Rights Reserved</p>
+              <a href="#" class="text-decoration-none me-3 small"
+                >Privacy Policy</a
+              >
+              <a href="#" class="text-decoration-none small"
+                >Terms of Service</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
-      document
-        .getElementById("upload-form")
-        .addEventListener("submit", function (e) {
-          e.preventDefault(); // Prevent default form submission
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+      });
 
-          const form = e.target;
-          const formData = new FormData(form);
+      // Initialize tooltips
+      const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+      );
+      const tooltipList = [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+      );
 
-          fetch(form.action, {
-            method: form.method,
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDZXH3DM8YTZFjmZO4caSfhUf5KTMna8A4",
+        authDomain: "crud-833c1.firebaseapp.com",
+        databaseURL:
+          "https://crud-833c1-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "crud-833c1",
+        storageBucket: "crud-833c1.firebasestorage.app",
+        messagingSenderId: "512061339186",
+        appId: "1:512061339186:web:b161bf3d4f1c728d88ee2b",
+        measurementId: "G-WS5RS5KZY6",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // DOM Elements
+      const uploadForm = document.getElementById("upload-form");
+      const fileInput = document.getElementById("file");
+      const fileInfo = document.getElementById("file-info");
+      const dropArea = document.getElementById("drop-area");
+      const browseButton = document.getElementById("browse-button");
+      const uploadButton = document.getElementById("upload-button");
+      const progressContainer = document.getElementById("progress-container");
+      const progressBar = document.getElementById("progress-bar");
+      const progressText = document.getElementById("progress-text");
+      const progressPercentage = document.getElementById("progress-percentage");
+      const resultContainer = document.getElementById("result-container");
+      const recentFiles = document.getElementById("recent-files");
+      const logoutButton = document.getElementById("logout-button");
+      const fileCountBadge = document.getElementById("file-count-badge");
+
+      // Event Listeners for drag and drop
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+
+      dropArea.addEventListener("drop", handleDrop, false);
+      browseButton.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", updateFileInfo);
+      uploadForm.addEventListener("submit", handleUpload);
+
+      // Logout handler
+      logoutButton.addEventListener("click", async () => {
+        try {
+          await firebase.auth().signOut();
+          window.location.href = "/auth/login";
+        } catch (error) {
+          console.error("Logout Error:", error);
+          showToast("Error logging out", "danger");
+        }
+      });
+
+      // Check authentication state
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in
+          const displayName =
+            user.displayName || user.email?.split("@")[0] || "User";
+          document.getElementById("userName").textContent = displayName;
+
+          // Set initials for avatar
+          let initials = displayName.charAt(0).toUpperCase();
+          if (displayName.includes(" ")) {
+            initials =
+              displayName.charAt(0) + displayName.split(" ")[1].charAt(0);
+          }
+          document.getElementById("userInitials").textContent = initials;
+
+          fetchRecentFiles();
+        } else {
+          // Redirect to login if not signed in
+          window.location.href = "/auth/login";
+        }
+      });
+
+      // Utility Functions
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      function highlight() {
+        dropArea.classList.add("drag-over");
+      }
+
+      function unhighlight() {
+        dropArea.classList.remove("drag-over");
+      }
+
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        updateFileInfo();
+      }
+
+      function updateFileInfo() {
+        if (fileInput.files.length > 0) {
+          fileInfo.innerHTML = "";
+          fileInfo.classList.add("show");
+
+          // Update file count badge
+          fileCountBadge.textContent = `${fileInput.files.length} file${
+            fileInput.files.length > 1 ? "s" : ""
+          }`;
+
+          // Create file list
+          for (let i = 0; i < fileInput.files.length; i++) {
+            const file = fileInput.files[i];
+            const fileSize = formatFileSize(file.size);
+            const isPython = file.name.endsWith(".py");
+            const isZip = file.name.endsWith(".zip");
+
+            const fileItem = document.createElement("div");
+            fileItem.className =
+              "d-flex align-items-center mb-2 p-2 border rounded";
+
+            fileItem.innerHTML = `
+            <i class="bi ${
+              isPython
+                ? "bi-filetype-py"
+                : isZip
+                ? "bi-file-earmark-zip"
+                : "bi-file"
+            } file-type-icon ${
+              isPython ? "text-primary" : isZip ? "text-success" : ""
+            }"></i>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong>${file.name}</strong>
+                <span class="file-badge ${
+                  isPython ? "python" : isZip ? "zip" : ""
+                }">${isPython ? "Python" : isZip ? "ZIP" : "File"}</span>
+              </div>
+              <small class="text-muted">${fileSize}</small>
+            </div>
+          `;
+
+            fileInfo.appendChild(fileItem);
+          }
+        } else {
+          fileInfo.innerHTML = "";
+          fileInfo.classList.remove("show");
+          fileCountBadge.textContent = "0 files";
+        }
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      async function handleUpload(e) {
+        e.preventDefault();
+
+        if (!fileInput.files.length) {
+          showResultMessage("Please select a file to upload", "danger");
+          return;
+        }
+
+        const formData = new FormData(uploadForm);
+
+        // Show progress
+        progressContainer.style.display = "block";
+        uploadButton.disabled = true;
+
+        // Simulate progress updates (in a real app, you'd get actual progress)
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+          progress += Math.random() * 10;
+          if (progress > 90) progress = 90; // Don't reach 100% until complete
+          updateProgress(progress, "Uploading files...");
+        }, 300);
+
+        try {
+          const response = await fetch("/upload/", {
+            method: "POST",
             body: formData,
-          })
-            .then((response) => {
-              if (response.ok) {
-                alert("File uploaded successfully!");
-                form.reset(); // Reset the form to clear the input
-              } else {
-                alert("Failed to upload file.");
-              }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert("An unexpected error occurred.");
-            });
+          });
+
+          const result = await response.json();
+
+          clearInterval(progressInterval);
+
+          if (response.ok) {
+            updateProgress(100, "Upload complete!");
+            setTimeout(() => {
+              showResultMessage(
+                result.message || "Files uploaded successfully!",
+                "success"
+              );
+              uploadForm.reset();
+              fileInfo.innerHTML = "";
+              fileInfo.classList.remove("show");
+              fileCountBadge.textContent = "0 files";
+              fetchRecentFiles();
+            }, 500);
+          } else {
+            showResultMessage(
+              result.error || "Failed to upload files.",
+              "danger"
+            );
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showResultMessage(
+            "An unexpected error occurred during upload.",
+            "danger"
+          );
+        } finally {
+          uploadButton.disabled = false;
+          setTimeout(() => {
+            progressContainer.style.display = "none";
+            updateProgress(0, "Uploading...");
+          }, 1000);
+          clearInterval(progressInterval);
+        }
+      }
+
+      function updateProgress(percentage, text) {
+        progressBar.style.width = `${percentage}%`;
+        progressText.textContent = text;
+        progressPercentage.textContent = `${Math.round(percentage)}%`;
+      }
+
+      function showResultMessage(message, type) {
+        resultContainer.classList.add("show");
+
+        // Icon based on message type
+        let icon = "bi-check-circle-fill";
+        if (type === "danger") icon = "bi-x-circle-fill";
+        else if (type === "warning") icon = "bi-exclamation-triangle-fill";
+        else if (type === "info") icon = "bi-info-circle-fill";
+
+        resultContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+          <div class="d-flex align-items-center">
+            <i class="bi ${icon} me-2" style="font-size: 1.2rem;"></i>
+            <div>${message}</div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        
+        ${
+          type === "success"
+            ? `
+        <div class="text-center mt-3">
+          <a href="/monitoring/" class="btn btn-primary">
+            <i class="bi bi-bar-chart-line"></i> Go to Monitoring
+          </a>
+        </div>
+        `
+            : ""
+        }
+      `;
+
+        // Auto hide after some time for success messages
+        if (type === "success") {
+          setTimeout(() => {
+            const alert = document.querySelector(".alert");
+            if (alert) {
+              const bsAlert = new bootstrap.Alert(alert);
+              bsAlert.close();
+            }
+          }, 5000);
+        }
+      }
+
+      // Toast notifications
+      function showToast(message, type) {
+        const toastContainer = document.createElement("div");
+        toastContainer.className = "position-fixed bottom-0 end-0 p-3";
+        toastContainer.style.zIndex = "5";
+
+        toastContainer.innerHTML = `
+        <div class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+      `;
+
+        document.body.appendChild(toastContainer);
+        const toastElement = toastContainer.querySelector(".toast");
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+
+        toastElement.addEventListener("hidden.bs.toast", () => {
+          toastContainer.remove();
         });
+      }
+
+      // Update fetchRecentFiles function to include the view file functionality
+
+      async function fetchRecentFiles() {
+        try {
+          const response = await fetch("/monitoring/files");
+          const data = await response.json();
+
+          if (data.files && data.files.length > 0) {
+            recentFiles.innerHTML = "";
+
+            data.files.slice(0, 5).forEach((file) => {
+              const listItem = document.createElement("li");
+              listItem.className =
+                "list-group-item d-flex justify-content-between align-items-center";
+
+              let fileIcon = "bi-file-earmark-code";
+              if (file.toLowerCase().endsWith(".zip")) {
+                fileIcon = "bi-file-earmark-zip";
+              } else if (file.toLowerCase().endsWith(".py")) {
+                fileIcon = "bi-filetype-py";
+              }
+
+              listItem.innerHTML = `
+        <div class="d-flex align-items-center flex-grow-1">
+          <i class="bi ${fileIcon} file-row-icon"></i>
+          <div class="text-truncate" title="${file}">${file}</div>
+        </div>
+        <div class="ms-2 d-flex gap-2">
+          <span class="file-badge python">Python</span>
+          <button class="btn-icon view-file-btn" data-filename="${file}" data-bs-toggle="tooltip" title="View file">
+            <i class="bi bi-eye-fill"></i>
+          </button>
+        </div>
+      `;
+              recentFiles.appendChild(listItem);
+
+              // Re-initialize tooltips for the new elements
+              const newTooltips = listItem.querySelectorAll(
+                '[data-bs-toggle="tooltip"]'
+              );
+              [...newTooltips].forEach((el) => new bootstrap.Tooltip(el));
+            });
+
+            // Add a "View All" link if there are more files
+            if (data.files.length > 5) {
+              const viewAllItem = document.createElement("li");
+              viewAllItem.className = "list-group-item text-center";
+              viewAllItem.innerHTML = `
+        <a href="/monitoring/" class="text-decoration-none">View all ${data.files.length} files <i class="bi bi-arrow-right ms-1"></i></a>
+      `;
+              recentFiles.appendChild(viewAllItem);
+            }
+
+            // Add click event for view buttons - UPDATED CODE HERE
+            document.querySelectorAll(".view-file-btn").forEach((btn) => {
+              btn.addEventListener("click", async function () {
+                const filename = this.getAttribute("data-filename");
+
+                try {
+                  // Show loading state
+                  document.getElementById("fileContent").textContent =
+                    "Loading...";
+                  const fileViewerModal = new bootstrap.Modal(
+                    document.getElementById("fileViewerModal")
+                  );
+                  fileViewerModal.show();
+
+                  // Set the modal title to include the filename
+                  document.getElementById(
+                    "fileViewerModalLabel"
+                  ).textContent = `File Viewer: ${filename}`;
+
+                  // Fetch the file content
+                  const response = await fetch(`/monitoring/file/${filename}`);
+
+                  if (!response.ok) {
+                    throw new Error(
+                      `Failed to fetch file: ${response.statusText}`
+                    );
+                  }
+
+                  const data = await response.json();
+
+                  if (data.error) {
+                    document.getElementById(
+                      "fileContent"
+                    ).textContent = `Error: ${data.error}`;
+                  } else {
+                    // Display the content with syntax highlighting
+                    const content = data.content || "No content available";
+                    document.getElementById("fileContent").textContent =
+                      content;
+
+                    // Apply syntax highlighting
+                    hljs.highlightElement(
+                      document.getElementById("fileContent")
+                    );
+                  }
+                } catch (error) {
+                  console.error("Error fetching file:", error);
+                  document.getElementById(
+                    "fileContent"
+                  ).textContent = `Error loading file: ${error.message}`;
+                  showToast(`Failed to load file: ${filename}`, "danger");
+                }
+              });
+            });
+          } else {
+            recentFiles.innerHTML = `
+      <li class="list-group-item text-center text-muted">
+        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+        No files uploaded yet
+      </li>
+    `;
+          }
+        } catch (error) {
+          console.error("Error fetching files:", error);
+          showToast("Failed to load recent files", "danger");
+        }
+      }
     </script>
   </body>
 </html>

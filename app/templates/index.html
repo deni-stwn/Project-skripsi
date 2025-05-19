@@ -3,10 +3,781 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>CodeScan - Python Plagiarism Detection Tool</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+      :root {
+        --primary: #3c6fdf;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --dark: #343a40;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      /* .container {
+        overflow-x: hidden;
+      } */
+
+      /* Navbar */
+      .navbar-brand img {
+        height: 40px;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(135deg, #4a59df 0%, #3c6fdf 100%);
+        padding: 100px 0;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNDAwIDY1My4xNGMxMzkuODEgMCAyNTMuMTQtMTEzLjMzIDI1My4xNC0yNTMuMTRTNTM5LjgxIDE0NjguODYgNDAwIDE0Ni44NiAxNDYuODYgMjYwLjE5IDE0Ni44NiA0MDBzMTEzLjMzIDI1My4xNCAyNTMuMTQgMjUzLjE0em0wIDI1LjMxYy0xNTQuMDYgMC0yNzguNDUtMTI0LjM5LTI3OC40NS0yNzguNDVTMjQ1Ljk0IDEyMS41NCA0MDAgMTIxLjU0IDY3OC40NiAyNDUuOTQgNjc4LjQ2IDQwMCA1NTQuMDYgNjc4LjQ1IDQwMCA2NzguNDV6IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIG9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik01MTkuMDIgNDAwYzAtNjUuNzMtNTMuMjktMTE5LjAyLTExOS4wMi0xMTkuMDJTMjgwLjk4IDMzNC4yNyAyODAuOTggNDAwczUzLjI5IDExOS4wMiAxMTkuMDIgMTE5LjAyUzUxOS4wMiA0NjUuNzMgNTE5LjAyIDQwMHptMjUuMzEgMGMwLTc5Ljk4LTY0Ljg0LTE0NC44NC0xNDQuMzMtMTQ0Ljg0UzI1NS42NyAzMjAuMDEgMjU1LjY3IDQwMHM2NC44NSAxNDQuMzMgMTQ0LjMzIDE0NC4zM1M1NDQuMzMgNDc5Ljk5IDU0NC4zMyA0MDB6IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIG9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik00MDAgNDc1Ljk4YzQxLjk2IDAgNzUuOTgtMzQuMDIgNzUuOTgtNzUuOThzLTM0LjAyLTc1Ljk4LTc1Ljk4LTc1Ljk4LTc1Ljk4IDM0LjAyLTc1Ljk4IDc1Ljk4IDM0LjAyIDc1Ljk4IDc1Ljk4IDc1Ljk4em0wIDI1LjMxYy01Ni4xNSAwLTEwMS4yOS00NS4xNC0xMDEuMjktMTAxLjI5UzM0My44NSAyOTguNzEgNDAwIDI5OC43MSA1MDEuMjkgMzQzLjg1IDUwMS4yOSA0MDBzLTQ1LjE0IDEwMS4yOS0xMDEuMjkgMTAxLjI5eiIgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJub256ZXJvIiBvcGFjaXR5PSIuMTUiLz48L3N2Zz4=");
+        background-repeat: no-repeat;
+        background-position: right center;
+        opacity: 0.3;
+        z-index: 1;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .feature-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+        background-color: rgba(60, 111, 223, 0.1);
+      }
+
+      .section-heading {
+        position: relative;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+      }
+
+      .section-heading:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background-color: var(--primary);
+      }
+
+      .section-heading.text-center:after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .how-it-works .step {
+        position: relative;
+        padding-left: 60px;
+        margin-bottom: 30px;
+      }
+
+      .how-it-works .step-number {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .testimonial-card {
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+      }
+
+      .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      footer {
+        background-color: #212529;
+        color: rgba(255, 255, 255, 0.6);
+      }
+    </style>
   </head>
   <body>
-    <h1>Welcome to the Flask App!</h1>
-    <p>This is a simple Flask application.</p>
+    <!-- Navbar -->
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top"
+    >
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <i
+            class="bi bi-shield-check text-primary"
+            style="font-size: 1.8rem; margin-right: 8px"
+          ></i>
+          <span class="fw-bold">CodeScan</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#how-it-works">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+          </ul>
+
+          <!-- Auth buttons container - will be replaced when logged in -->
+          <div id="auth-buttons" class="d-flex">
+            <a href="/auth/login" class="btn btn-outline-primary me-2">Login</a>
+            <a href="/auth/register" class="btn btn-primary">Register</a>
+          </div>
+
+          <!-- User menu - will be shown when logged in -->
+          <div id="user-menu" class="d-none">
+            <div class="d-flex align-items-center">
+              <div
+                class="user-avatar me-2"
+                id="userInitials"
+                style="
+                  width: 36px;
+                  height: 36px;
+                  border-radius: 50%;
+                  background-color: var(--primary);
+                  color: white;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: 500;
+                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                "
+              >
+                U
+              </div>
+              <div class="dropdown">
+                <a
+                  class="text-dark text-decoration-none dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <span id="userName">User</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <a class="dropdown-item" href="/upload/"
+                      ><i class="bi bi-cloud-upload me-2"></i>Upload Files</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/monitoring/"
+                      ><i class="bi bi-bar-chart-line me-2"></i>Monitoring</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/profile/"
+                      ><i class="bi bi-person me-2"></i>Profile</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#" id="logout-button"
+                      ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 hero-content" data-aos="fade-right">
+            <h1 class="display-4 fw-bold mb-4">
+              Python Code Plagiarism Detection System
+            </h1>
+            <p class="lead mb-4">
+              Detect similarities and potential plagiarism in Python code
+              submissions with our advanced AI-powered technology.
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+              <a href="/auth/register" class="btn btn-light btn-lg"
+                >Get Started</a
+              >
+              <a href="#features" class="btn btn-outline-light btn-lg"
+                >Learn More</a
+              >
+            </div>
+          </div>
+          <div
+            class="col-lg-6 d-none d-lg-flex justify-content-end"
+            data-aos="fade-left"
+            data-aos-delay="200"
+          >
+            <img
+              src="../static/images/python.png"
+              alt="Python Code"
+              class="img-fluid rounded"
+              style="max-height: 400px"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-5" id="features">
+      <div class="container py-5">
+        <h2 class="section-heading text-center" data-aos="fade-up">
+          Key Features
+        </h2>
+        <div class="row g-4 py-4">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="text-center p-4">
+              <div class="feature-icon mb-3">
+                <i class="bi bi-file-earmark-code"></i>
+              </div>
+              <h3>Python Code Analysis</h3>
+              <p class="text-muted">
+                Advanced algorithms to analyze Python code structure, syntax,
+                and semantic similarities.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="text-center p-4">
+              <div class="feature-icon mb-3">
+                <i class="bi bi-speedometer"></i>
+              </div>
+              <h3>Fast Detection</h3>
+              <p class="text-muted">
+                Compare multiple files simultaneously with quick results and
+                detailed reports.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="text-center p-4">
+              <div class="feature-icon mb-3">
+                <i class="bi bi-graph-up"></i>
+              </div>
+              <h3>Detailed Reports</h3>
+              <p class="text-muted">
+                Comprehensive similarity metrics and side-by-side code
+                comparisons.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="text-center p-4">
+              <div class="feature-icon mb-3">
+                <i class="bi bi-cloud-arrow-up"></i>
+              </div>
+              <h3>Batch Upload</h3>
+              <p class="text-muted">
+                Upload multiple Python files or ZIP archives containing code
+                submissions.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="500">
+            <div class="text-center p-4">
+              <div class="feature-icon mb-3">
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <h3>Secure Storage</h3>
+              <p class="text-muted">
+                Your code files are securely stored and processed with privacy
+                in mind.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="600">
+            <div class="text-center p-4">
+              <div class="feature-icon mb-3">
+                <i class="bi bi-gear"></i>
+              </div>
+              <h3>AI-Powered</h3>
+              <p class="text-muted">
+                Advanced machine learning models for accurate plagiarism
+                detection.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="bg-light py-5" id="how-it-works">
+      <div class="container py-5">
+        <div class="row align-items-center">
+          <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+            <h2 class="section-heading">How It Works</h2>
+            <div class="how-it-works">
+              <div class="step" data-aos="fade-up" data-aos-delay="100">
+                <div class="step-number">1</div>
+                <h4>Upload Your Code Files</h4>
+                <p class="text-muted">
+                  Upload individual Python files or ZIP archives containing
+                  multiple code files.
+                </p>
+              </div>
+              <div class="step" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-number">2</div>
+                <h4>Automated Analysis</h4>
+                <p class="text-muted">
+                  Our system processes the code, extracts semantic features, and
+                  analyzes the structure.
+                </p>
+              </div>
+              <div class="step" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-number">3</div>
+                <h4>Results &amp; Comparison</h4>
+                <p class="text-muted">
+                  View detailed similarity metrics and side-by-side comparisons
+                  of potentially plagiarized code.
+                </p>
+              </div>
+              <div class="step" data-aos="fade-up" data-aos-delay="400">
+                <div class="step-number">4</div>
+                <h4>Generate Report</h4>
+                <p class="text-muted">
+                  Download comprehensive reports for further review and
+                  documentation.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-6 d-flex justify-content-end"
+            data-aos="fade-left"
+            data-aos-delay="300"
+          >
+            <img
+              src="../static/images/how ist work.jpg"
+              alt="How it works"
+              class="img-fluid rounded"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="py-5" id="about">
+      <div class="container py-5">
+        <div class="row align-items-center">
+          <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0" data-aos="fade-left">
+            <h2 class="section-heading">About CodeScan</h2>
+            <p data-aos="fade-up" data-aos-delay="100">
+              CodeScan is an advanced Python code plagiarism detection system
+              designed specifically for educational institutions and programming
+              courses. Our mission is to promote academic integrity while
+              helping instructors efficiently identify instances of code
+              plagiarism.
+            </p>
+            <p data-aos="fade-up" data-aos-delay="200">
+              The system uses state-of-the-art natural language processing and
+              machine learning techniques to analyze code beyond simple string
+              matching. It understands code semantics, structure, and
+              programming patterns to catch even sophisticated attempts at
+              disguising plagiarized code.
+            </p>
+            <p data-aos="fade-up" data-aos-delay="300">
+              Developed as part of a computer science thesis project, CodeScan
+              represents the cutting edge in automated code similarity
+              detection.
+            </p>
+          </div>
+          <div
+            class="col-lg-6 order-lg-1"
+            data-aos="fade-right"
+            data-aos-delay="200"
+          >
+            <img
+              src="../static/images/about.jpg"
+              alt="Team"
+              class="img-fluid rounded shadow"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="bg-light py-5">
+      <div class="container py-5">
+        <h2 class="section-heading text-center" data-aos="fade-up">
+          What Users Say
+        </h2>
+        <div class="row g-4">
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card testimonial-card h-100 p-4">
+              <div class="d-flex align-items-center mb-3">
+                <div class="text-warning">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                </div>
+              </div>
+              <p class="card-text">
+                "This tool has saved me countless hours reviewing student
+                submissions. It catches similarities that I would have missed,
+                even when students try to change variable names and formatting."
+              </p>
+              <div class="mt-auto pt-3">
+                <h5 class="mb-0">Dr. Jane Smith</h5>
+                <p class="text-muted mb-0">Computer Science Professor</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card testimonial-card h-100 p-4">
+              <div class="d-flex align-items-center mb-3">
+                <div class="text-warning">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                </div>
+              </div>
+              <p class="card-text">
+                "The side-by-side comparison feature is incredible. It makes it
+                easy to show students exactly where the similarities are and
+                have meaningful conversations about academic integrity."
+              </p>
+              <div class="mt-auto pt-3">
+                <h5 class="mb-0">Michael Johnson</h5>
+                <p class="text-muted mb-0">Teaching Assistant</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+            <div class="card testimonial-card h-100 p-4">
+              <div class="d-flex align-items-center mb-3">
+                <div class="text-warning">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                </div>
+              </div>
+              <p class="card-text">
+                "As a department head, this system has helped us standardize how
+                we detect and handle code plagiarism across all our programming
+                courses. The reports are detailed and well-organized."
+              </p>
+              <div class="mt-auto pt-3">
+                <h5 class="mb-0">Prof. Robert Chen</h5>
+                <p class="text-muted mb-0">CS Department Chair</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-5 bg-primary text-white">
+      <div class="container py-4">
+        <div class="row align-items-center">
+          <div class="col-lg-8 mb-4 mb-lg-0" data-aos="fade-right">
+            <h2 class="fw-bold mb-3">Ready to try CodeScan?</h2>
+            <p class="lead mb-0">
+              Join today and experience the power of advanced code plagiarism
+              detection.
+            </p>
+          </div>
+          <div
+            class="col-lg-4 text-lg-end"
+            data-aos="fade-left"
+            data-aos-delay="200"
+          >
+            <a href="/auth/register" class="btn btn-light btn-lg"
+              >Sign Up Now</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-5">
+      <div class="container py-4">
+        <div class="row">
+          <div class="col-lg-4 mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <i
+                class="bi bi-shield-check text-primary"
+                style="font-size: 2rem; margin-right: 10px"
+              ></i>
+              <h5 class="text-white mb-0">CodeScan</h5>
+            </div>
+            <p>
+              Advanced Python code plagiarism detection system for educational
+              institutions and programming courses.
+            </p>
+            <div class="d-flex gap-3">
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-twitter"></i>
+              </a>
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-linkedin"></i>
+              </a>
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-github"></i>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h5 class="text-white mb-3">Quick Links</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-white-50">Home</a>
+              </li>
+              <li class="mb-2">
+                <a href="#features" class="text-decoration-none text-white-50"
+                  >Features</a
+                >
+              </li>
+              <li class="mb-2">
+                <a
+                  href="#how-it-works"
+                  class="text-decoration-none text-white-50"
+                  >How It Works</a
+                >
+              </li>
+              <li class="mb-2">
+                <a href="#about" class="text-decoration-none text-white-50"
+                  >About</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h5 class="text-white mb-3">Resources</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-white-50"
+                  >Documentation</a
+                >
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-white-50">API</a>
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-white-50"
+                  >Support</a
+                >
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-white-50">Blog</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-4 mb-4">
+            <h5 class="text-white mb-3">Contact Us</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2 d-flex">
+                <i class="bi bi-envelope me-2"></i>
+                <a
+                  href="mailto:contact@codescan.io"
+                  class="text-decoration-none text-white-50"
+                  >contact@codescan.io</a
+                >
+              </li>
+              <li class="mb-2 d-flex">
+                <i class="bi bi-telephone me-2"></i>
+                <span class="text-white-50">+1 (555) 123-4567</span>
+              </li>
+              <li class="mb-2 d-flex">
+                <i class="bi bi-geo-alt me-2"></i>
+                <span class="text-white-50"
+                  >University Research Building, Suite 400, Jakarta,
+                  Indonesia</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <hr class="mt-4 border-secondary" />
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-center py-3"
+        >
+          <div class="text-white-50">
+            &copy; 2025 CodeScan. All rights reserved.
+          </div>
+          <div class="d-flex gap-4">
+            <a href="#" class="text-decoration-none text-white-50"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-decoration-none text-white-50"
+              >Terms of Service</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+        offset: 100,
+      });
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDZXH3DM8YTZFjmZO4caSfhUf5KTMna8A4",
+        authDomain: "crud-833c1.firebaseapp.com",
+        databaseURL:
+          "https://crud-833c1-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "crud-833c1",
+        storageBucket: "crud-833c1.firebasestorage.app",
+        messagingSenderId: "512061339186",
+        appId: "1:512061339186:web:b161bf3d4f1c728d88ee2b",
+        measurementId: "G-WS5RS5KZY6",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Check authentication state and update UI accordingly
+      firebase.auth().onAuthStateChanged(function (user) {
+        const authButtons = document.getElementById("auth-buttons");
+        const userMenu = document.getElementById("user-menu");
+
+        if (user) {
+          // User is signed in, hide auth buttons and show user menu
+          authButtons.classList.add("d-none");
+          userMenu.classList.remove("d-none");
+
+          // Update user info
+          const displayName =
+            user.displayName || user.email?.split("@")[0] || "User";
+          document.getElementById("userName").textContent = displayName;
+
+          // Set initials for avatar
+          let initials = displayName.charAt(0).toUpperCase();
+          if (displayName.includes(" ")) {
+            initials =
+              displayName.charAt(0) + displayName.split(" ")[1].charAt(0);
+            initials = initials.toUpperCase();
+          }
+          document.getElementById("userInitials").textContent = initials;
+
+          // Update hero section CTA for logged in users
+          const heroCtaButtons = document.querySelector(".hero .d-flex.gap-3");
+          if (heroCtaButtons) {
+            heroCtaButtons.innerHTML = `
+          <a href="/upload/" class="btn btn-light btn-lg">Upload Files</a>
+          <a href="/monitoring/" class="btn btn-outline-light btn-lg">View Monitoring</a>
+        `;
+          }
+
+          // Update bottom CTA section for logged in users
+          const ctaButton = document.querySelector(
+            "section.bg-primary .col-lg-4 a.btn"
+          );
+          if (ctaButton) {
+            ctaButton.href = "/upload/";
+            ctaButton.textContent = "Upload Files";
+          }
+        } else {
+          // User is signed out, show auth buttons and hide user menu
+          authButtons.classList.remove("d-none");
+          userMenu.classList.add("d-none");
+        }
+      });
+
+      // Logout handler
+      document
+        .getElementById("logout-button")
+        ?.addEventListener("click", async function (e) {
+          e.preventDefault();
+          try {
+            await firebase.auth().signOut();
+            window.location.href = "/";
+          } catch (error) {
+            console.error("Error signing out:", error);
+            alert("Failed to sign out. Please try again.");
+          }
+        });
+    </script>
   </body>
 </html>

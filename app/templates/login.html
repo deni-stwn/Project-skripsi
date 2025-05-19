@@ -3,56 +3,411 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>CodeScan - Login</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <style>
+      :root {
+        --primary: #3c6fdf;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --dark: #343a40;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .login-container {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .left-panel {
+        background: linear-gradient(135deg, #4a59df 0%, #3c6fdf 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .left-panel::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNDAwIDY1My4xNGMxMzkuODEgMCAyNTMuMTQtMTEzLjMzIDI1My4xNC0yNTMuMTRTNTM5LjgxIDE0NjguODYgNDAwIDE0Ni44NiAxNDYuODYgMjYwLjE5IDE0Ni44NiA0MDBzMTEzLjMzIDI1My4xNCAyNTMuMTQgMjUzLjE0em0wIDI1LjMxYy0xNTQuMDYgMC0yNzguNDUtMTI0LjM5LTI3OC40NS0yNzguNDVTMjQ1Ljk0IDEyMS41NCA0MDAgMTIxLjU0IDY3OC40NiAyNDUuOTQgNjc4LjQ2IDQwMCA1NTQuMDYgNjc4LjQ1IDQwMCA2NzguNDV6IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIG9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik01MTkuMDIgNDAwYzAtNjUuNzMtNTMuMjktMTE5LjAyLTExOS4wMi0xMTkuMDJTMjgwLjk4IDMzNC4yNyAyODAuOTggNDAwczUzLjI5IDExOS4wMiAxMTkuMDIgMTE5LjAyUzUxOS4wMiA0NjUuNzMgNTE5LjAyIDQwMHptMjUuMzEgMGMwLTc5Ljk4LTY0Ljg0LTE0NC44NC0xNDQuMzMtMTQ0Ljg0UzI1NS42NyAzMjAuMDEgMjU1LjY3IDQwMHM2NC44NSAxNDQuMzMgMTQ0LjMzIDE0NC4zM1M1NDQuMzMgNDc5Ljk5IDU0NC4zMyA0MDB6IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9Im5vbnplcm8iIG9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik00MDAgNDc1Ljk4YzQxLjk2IDAgNzUuOTgtMzQuMDIgNzUuOTgtNzUuOThzLTM0LjAyLTc1Ljk4LTc1Ljk4LTc1Ljk4LTc1Ljk4IDM0LjAyLTc1Ljk4IDc1Ljk4IDM0LjAyIDc1Ljk4IDc1Ljk4IDc1Ljk4em0wIDI1LjMxYy01Ni4xNSAwLTEwMS4yOS00NS4xNC0xMDEuMjktMTAxLjI5UzM0My44NSAyOTguNzEgNDAwIDI5OC43MSA1MDEuMjkgMzQzLjg1IDUwMS4yOSA0MDBzLTQ1LjE0IDEwMS4yOS0xMDEuMjkgMTAxLjI5eiIgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJub256ZXJvIiBvcGFjaXR5PSIuMTUiLz48L3N2Zz4=");
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.1;
+        z-index: 1;
+      }
+
+      .left-content {
+        z-index: 2;
+        text-align: center;
+        max-width: 80%;
+      }
+
+      .login-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .card-body {
+        padding: 2.5rem;
+      }
+      /* 
+      .form-floating {
+        margin-bottom: 1.5rem;
+      } */
+
+      .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(60, 111, 223, 0.25);
+      }
+
+      .btn-primary {
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        background-color: var(--primary);
+        border-color: var(--primary);
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(60, 111, 223, 0.11),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn-primary:hover {
+        background-color: #345ec5;
+        border-color: #345ec5;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(60, 111, 223, 0.18),
+          0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-primary:active {
+        transform: translateY(1px);
+        box-shadow: 0 3px 6px rgba(60, 111, 223, 0.15),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .social-login {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      .social-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        color: white;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+      }
+
+      .facebook-btn {
+        background-color: #3b5998;
+      }
+
+      .google-btn {
+        background-color: #db4437;
+      }
+
+      .github-btn {
+        background-color: #333;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--secondary);
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .divider span {
+        padding: 0 1rem;
+        font-size: 0.875rem;
+      }
+
+      .input-group-text {
+        background-color: transparent;
+        border-left: none;
+        cursor: pointer;
+      }
+
+      .input-group .form-control {
+        border-right: none;
+      }
+
+      .form-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+
+      .form-logo i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-right: 0.75rem;
+      }
+
+      .form-logo span {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--dark);
+      }
+
+      .alert-error {
+        display: none;
+        background-color: #f8d7da;
+        color: #842029;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid #f5c2c7;
+        border-radius: 8px;
+        font-size: 0.875rem;
+      }
+
+      .remember-me {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-check-input:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      /* Animation for the card */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .login-card {
+        animation: slideIn 0.5s ease-out forwards;
+      }
+    </style>
   </head>
-  <body class="bg-light">
-    <div class="container">
-      <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-          <div class="card shadow">
-            <div class="card-body">
-              <h2 class="text-center mb-4">Login</h2>
+  <body>
+    <div class="login-container">
+      <div class="container">
+        <div class="row g-0 shadow-lg login-card">
+          <!-- Left panel - Informational -->
+          <div class="col-lg-6 d-none d-lg-flex left-panel">
+            <div class="left-content" data-aos="fade-right">
+              <div class="mb-4">
+                <i
+                  class="bi bi-shield-check text-white"
+                  style="font-size: 4rem"
+                ></i>
+              </div>
+              <h1 class="display-5 fw-bold mb-4">Welcome Back!</h1>
+              <p class="lead mb-4">
+                Sign in to access CodeScan's advanced Python plagiarism
+                detection system.
+              </p>
+              <div>
+                <p class="mb-1">Detect code similarities with precision</p>
+                <p class="mb-1">Analyze multiple submissions efficiently</p>
+                <p class="mb-1">Generate detailed comparison reports</p>
+              </div>
+              <div class="mt-5">
+                <span class="fs-6 opacity-75">Don't have an account yet?</span>
+                <div class="mt-2">
+                  <a
+                    href="/auth/register"
+                    class="btn btn-outline-light btn-lg px-4"
+                    >Create Account</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right panel - Login form -->
+          <div class="col-lg-6 bg-white">
+            <div
+              class="card-body d-flex flex-column justify-content-center"
+              data-aos="fade-left"
+            >
+              <div class="form-logo">
+                <i class="bi bi-shield-check"></i>
+                <span>CodeScan</span>
+              </div>
+              <h2 class="text-center mb-4 fw-bold">Sign In</h2>
+
+              <div class="alert alert-error" id="loginError">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span id="errorMessage"></span>
+              </div>
+
               <form id="loginForm" novalidate>
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
+                <div class="form-floating mb-3">
                   <input
                     type="email"
                     class="form-control"
                     id="email"
+                    placeholder="name@example.com"
                     required
                   />
+                  <label for="email">Email address</label>
                   <div class="invalid-feedback" id="emailError">
                     Please enter a valid email address.
                   </div>
                 </div>
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    required
-                  />
+
+                <div class="input-group mb-3">
+                  <div class="form-floating flex-grow-1">
+                    <input
+                      type="password"
+                      class="form-control border-end-0"
+                      id="password"
+                      placeholder="Password"
+                      required
+                    />
+                    <label for="password">Password</label>
+                  </div>
+                  <span
+                    class="input-group-text bg-transparent"
+                    id="togglePassword"
+                  >
+                    <i class="bi bi-eye-slash"></i>
+                  </span>
                   <div class="invalid-feedback" id="passwordError">
                     Please enter your password.
                   </div>
                 </div>
-                <div class="d-grid">
-                  <button type="submit" class="btn btn-primary">Login</button>
+
+                <div class="remember-me">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="rememberMe"
+                    />
+                    <label class="form-check-label" for="rememberMe">
+                      Remember me
+                    </label>
+                  </div>
+                  <a href="#" class="text-decoration-none text-primary"
+                    >Forgot password?</a
+                  >
                 </div>
-                <div class="text-center mt-3">
-                  <p>
-                    Don't have an account?
-                    <a href="/auth/register">Register here</a>
-                  </p>
+
+                <div class="d-grid">
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="loginButton"
+                  >
+                    <span id="buttonText">Login</span>
+                    <span
+                      id="buttonSpinner"
+                      class="spinner-border spinner-border-sm ms-2 d-none"
+                      role="status"
+                    ></span>
+                  </button>
                 </div>
               </form>
+
+              <div class="divider">
+                <span>or continue with</span>
+              </div>
+
+              <div class="social-login">
+                <a
+                  href="#"
+                  class="social-btn google-btn"
+                  title="Login with Google"
+                >
+                  <i class="bi bi-google"></i>
+                </a>
+                <a
+                  href="#"
+                  class="social-btn github-btn"
+                  title="Login with GitHub"
+                >
+                  <i class="bi bi-github"></i>
+                </a>
+                <a
+                  href="#"
+                  class="social-btn facebook-btn"
+                  title="Login with Facebook"
+                >
+                  <i class="bi bi-facebook"></i>
+                </a>
+              </div>
+
+              <div class="text-center mt-3 d-block d-lg-none">
+                <p>
+                  Don't have an account?
+                  <a href="/auth/register" class="text-decoration-none fw-bold"
+                    >Register here</a
+                  >
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="/" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Home
+          </a>
         </div>
       </div>
     </div>
@@ -60,8 +415,16 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+
       // Your Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyDZXH3DM8YTZFjmZO4caSfhUf5KTMna8A4",
@@ -78,6 +441,24 @@
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
 
+      // Toggle password visibility
+      document
+        .getElementById("togglePassword")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const icon = this.querySelector("i");
+
+          if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+          } else {
+            passwordInput.type = "password";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+          }
+        });
+
       // Form validation function
       function validateForm() {
         const email = document.getElementById("email");
@@ -87,12 +468,18 @@
         // Reset previous error states
         email.classList.remove("is-invalid");
         password.classList.remove("is-invalid");
+        document.getElementById("loginError").style.display = "none";
 
         // Email validation
         if (!email.value) {
           email.classList.add("is-invalid");
           document.getElementById("emailError").textContent =
             "Email is required.";
+          isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(email.value)) {
+          email.classList.add("is-invalid");
+          document.getElementById("emailError").textContent =
+            "Please enter a valid email address.";
           isValid = false;
         }
 
@@ -107,6 +494,17 @@
         return isValid;
       }
 
+      // Show error message
+      function showError(message) {
+        const errorDiv = document.getElementById("loginError");
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = message;
+        errorDiv.style.display = "block";
+
+        // Scroll to error message
+        errorDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
       // Handle login
       document
         .getElementById("loginForm")
@@ -117,8 +515,18 @@
             return;
           }
 
+          const loginButton = document.getElementById("loginButton");
+          const buttonText = document.getElementById("buttonText");
+          const buttonSpinner = document.getElementById("buttonSpinner");
+
+          // Show loading state
+          loginButton.disabled = true;
+          buttonText.textContent = "Signing in...";
+          buttonSpinner.classList.remove("d-none");
+
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
+          const rememberMe = document.getElementById("rememberMe").checked;
 
           try {
             // Sign in with email and password
@@ -127,9 +535,21 @@
               .signInWithEmailAndPassword(email, password);
             const user = userCredential.user;
 
+            // Set persistence based on "Remember me" checkbox
+            const persistence = rememberMe
+              ? firebase.auth.Auth.Persistence.LOCAL
+              : firebase.auth.Auth.Persistence.SESSION;
+
+            await firebase.auth().setPersistence(persistence);
+
             // Check if email is verified
             if (!user.emailVerified) {
-              alert("Please verify your email before logging in.");
+              // Reset loading state
+              loginButton.disabled = false;
+              buttonText.textContent = "Login";
+              buttonSpinner.classList.add("d-none");
+
+              showError("Please verify your email before logging in.");
               return;
             }
 
@@ -149,18 +569,51 @@
             });
 
             if (response.ok) {
-              window.location.href = "/"; // Redirect to dashboard after successful login
+              window.location.href = "/upload/"; // Redirect to upload page after successful login
             } else {
               const data = await response.json();
-              alert(data.error || "Login failed");
+
+              // Reset loading state
+              loginButton.disabled = false;
+              buttonText.textContent = "Login";
+              buttonSpinner.classList.add("d-none");
+
+              showError(data.error || "Login failed. Please try again.");
             }
           } catch (error) {
             console.error("Error:", error);
-            alert(error.message || "Login failed");
+
+            // Reset loading state
+            loginButton.disabled = false;
+            buttonText.textContent = "Login";
+            buttonSpinner.classList.add("d-none");
+
+            // Show user-friendly error messages
+            let errorMessage = "Login failed. Please try again.";
+
+            if (
+              error.code === "auth/user-not-found" ||
+              error.code === "auth/wrong-password"
+            ) {
+              errorMessage = "Invalid email or password.";
+            } else if (error.code === "auth/too-many-requests") {
+              errorMessage =
+                "Too many unsuccessful login attempts. Please try again later.";
+            } else if (error.code === "auth/network-request-failed") {
+              errorMessage = "Network error. Please check your connection.";
+            }
+
+            showError(errorMessage);
           }
         });
-    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      // Check if user is already logged in
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user && user.emailVerified) {
+          // User is signed in and verified, redirect to dashboard
+          window.location.href = "/upload/";
+        }
+      });
+    </script>
   </body>
 </html>
