@@ -1,0 +1,372 @@
+<mxfile host="app.diagrams.net" modified="2023-05-20T12:30:00.000Z" agent="5.0 (Windows)" etag="erd-codescan-plagiarism" version="14.6.13" type="device">
+  <diagram id="codescan-erd-diagram" name="CodeScan ERD">
+    <mxGraphModel dx="1422" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- User Entity -->
+        <mxCell id="user-entity" value="Users" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="180" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="user-pk" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1" parent="user-entity">
+          <mxGeometry y="30" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user-pk-key" value="PK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;fontStyle=1;" vertex="1" parent="user-pk">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-pk-value" value="uid VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;fontStyle=5;" vertex="1" parent="user-pk">
+          <mxGeometry x="30" width="150" height="30" as="geometry">
+            <mxRectangle width="150" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-email" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="user-entity">
+          <mxGeometry y="60" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user-email-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="user-email">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-email-value" value="email VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="user-email">
+          <mxGeometry x="30" width="150" height="30" as="geometry">
+            <mxRectangle width="150" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-name" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="user-entity">
+          <mxGeometry y="90" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user-name-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="user-name">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-name-value" value="name VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="user-name">
+          <mxGeometry x="30" width="150" height="30" as="geometry">
+            <mxRectangle width="150" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-role" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="user-entity">
+          <mxGeometry y="120" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user-role-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="user-role">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-role-value" value="role VARCHAR(50)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="user-role">
+          <mxGeometry x="30" width="150" height="30" as="geometry">
+            <mxRectangle width="150" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-created" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="user-entity">
+          <mxGeometry y="150" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user-created-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="user-created">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-created-value" value="created_at TIMESTAMP" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="user-created">
+          <mxGeometry x="30" width="150" height="30" as="geometry">
+            <mxRectangle width="150" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- CodeFile Entity -->
+        <mxCell id="codefile-entity" value="CodeFiles" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="380" y="200" width="200" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-pk" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1" parent="codefile-entity">
+          <mxGeometry y="30" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-pk-key" value="PK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;fontStyle=1;" vertex="1" parent="codefile-pk">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-pk-value" value="file_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;fontStyle=5;" vertex="1" parent="codefile-pk">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-fk" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="codefile-entity">
+          <mxGeometry y="60" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-fk-key" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="codefile-fk">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-fk-value" value="user_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="codefile-fk">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-filename" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="codefile-entity">
+          <mxGeometry y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-filename-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="codefile-filename">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-filename-value" value="filename VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="codefile-filename">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-filepath" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="codefile-entity">
+          <mxGeometry y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-filepath-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="codefile-filepath">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-filepath-value" value="file_path VARCHAR(512)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="codefile-filepath">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-uploaded" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="codefile-entity">
+          <mxGeometry y="150" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-uploaded-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="codefile-uploaded">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-uploaded-value" value="uploaded_at TIMESTAMP" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="codefile-uploaded">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-embedding" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="codefile-entity">
+          <mxGeometry y="180" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="codefile-embedding-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="codefile-embedding">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="codefile-embedding-value" value="embedding_vector JSON" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="codefile-embedding">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Comparison Results Entity -->
+        <mxCell id="comparison-entity" value="ComparisonResults" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="640" y="200" width="200" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-pk" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1" parent="comparison-entity">
+          <mxGeometry y="30" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-pk-key" value="PK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;fontStyle=1;" vertex="1" parent="comparison-pk">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-pk-value" value="comparison_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;fontStyle=5;" vertex="1" parent="comparison-pk">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-user" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="comparison-entity">
+          <mxGeometry y="60" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-user-key" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="comparison-user">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-user-value" value="user_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="comparison-user">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-file1" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="comparison-entity">
+          <mxGeometry y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-file1-key" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="comparison-file1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-file1-value" value="file1_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="comparison-file1">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-file2" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="comparison-entity">
+          <mxGeometry y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-file2-key" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="comparison-file2">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-file2-value" value="file2_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="comparison-file2">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-similarity" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="comparison-entity">
+          <mxGeometry y="150" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-similarity-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="comparison-similarity">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-similarity-value" value="similarity_score FLOAT" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="comparison-similarity">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-timestamp" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="comparison-entity">
+          <mxGeometry y="180" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="comparison-timestamp-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="comparison-timestamp">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comparison-timestamp-value" value="created_at TIMESTAMP" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="comparison-timestamp">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Relationships -->
+        <mxCell id="user-codefile-rel" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="user-pk" target="codefile-fk">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="370" y="460" as="sourcePoint" />
+            <mxPoint x="470" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="user-comparison-rel" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="user-pk" target="comparison-user">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="370" y="460" as="sourcePoint" />
+            <mxPoint x="470" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="codefile1-comparison-rel" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="codefile-pk" target="comparison-file1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="370" y="460" as="sourcePoint" />
+            <mxPoint x="470" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="codefile2-comparison-rel" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="codefile-pk" target="comparison-file2">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="370" y="460" as="sourcePoint" />
+            <mxPoint x="470" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- MatchingBlock Entity -->
+        <mxCell id="matching-block-entity" value="MatchingBlocks" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="640" y="450" width="200" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-pk" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1" parent="matching-block-entity">
+          <mxGeometry y="30" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-pk-key" value="PK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;fontStyle=1;" vertex="1" parent="matching-block-pk">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-pk-value" value="block_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;fontStyle=5;" vertex="1" parent="matching-block-pk">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-comparison" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="matching-block-entity">
+          <mxGeometry y="60" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-comparison-key" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=#f5f5f5;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="matching-block-comparison">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-comparison-value" value="comparison_id VARCHAR(255)" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="matching-block-comparison">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-file1-line" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="matching-block-entity">
+          <mxGeometry y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-file1-line-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="matching-block-file1-line">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-file1-line-value" value="file1_line_start INT" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="matching-block-file1-line">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-file2-line" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="matching-block-entity">
+          <mxGeometry y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-file2-line-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="matching-block-file2-line">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-file2-line-value" value="file2_line_start INT" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="matching-block-file2-line">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-length" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="matching-block-entity">
+          <mxGeometry y="150" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-length-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="matching-block-length">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-length-value" value="length INT" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="matching-block-length">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-content" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="matching-block-entity">
+          <mxGeometry y="180" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="matching-block-content-key" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;align=center;top=0;left=0;bottom=0;right=0;" vertex="1" parent="matching-block-content">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="matching-block-content-value" value="content TEXT" style="shape=partialRectangle;overflow=hidden;connectable=0;align=left;top=0;left=0;bottom=0;right=0;spacingLeft=6;" vertex="1" parent="matching-block-content">
+          <mxGeometry x="30" width="170" height="30" as="geometry">
+            <mxRectangle width="170" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- MatchingBlock to Comparison Relationship -->
+        <mxCell id="comparison-block-rel" value="" style="edgeStyle=orthogonalEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="comparison-entity" target="matching-block-entity">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="370" y="460" as="sourcePoint" />
+            <mxPoint x="470" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Title -->
+        <mxCell id="title" value="CodeScan Plagiarism Detection System - Entity Relationship Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="200" y="120" width="600" height="30" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

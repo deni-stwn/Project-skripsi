@@ -610,8 +610,12 @@
       // Check if user is already logged in
       firebase.auth().onAuthStateChanged((user) => {
         if (user && user.emailVerified) {
-          // User is signed in and verified, redirect to dashboard
-          window.location.href = "/upload/";
+          user.getIdToken().then(function (token) {
+            // Store in cookie
+            document.cookie = `token=${token}; path=/; max-age=3600`;
+            // Redirect to dashboard/upload page
+            window.location.href = "/upload/";
+          });
         }
       });
     </script>

@@ -13,8 +13,26 @@ def euclidean_distance(vects):
 def load_embeddings(path):
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    file_names = list(data.keys())
-    embeddings = [np.array(data[f]) for f in file_names]
+    
+    # Handle both old and new format (with metadata)
+    if "embeddings" in data:
+        # New format with metadata
+        embeddings_data = data["embeddings"]
+    else:
+        # Old format without metadata
+        embeddings_data = data
+    
+    file_names = list(embeddings_data.keys())
+    embeddings = []
+    
+    for f in file_names:
+        if isinstance(embeddings_data[f], dict) and "embedding" in embeddings_data[f]:
+            # New format where each file has a dict with "embedding" key
+            embeddings.append(np.array(embeddings_data[f]["embedding"]))
+        else:
+            # Old format where each file maps directly to its embedding
+            embeddings.append(np.array(embeddings_data[f]))
+    
     return embeddings, file_names
 
 def check_plagiarism_from_json(json_path):
@@ -50,7 +68,7 @@ def check_plagiarism_from_json(json_path):
                 'similarity': similarity_score
             })
 
-        results = sorted(results, key=lambda x: x['similarity'], reverse=True)
+        results = sorted(results, key=lambda x: float(x['similarity']), reverse=True)
         return results
         
     except Exception as e:

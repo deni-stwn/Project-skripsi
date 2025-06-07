@@ -1,19 +1,59 @@
-from flask import Blueprint, request, jsonify, current_app, render_template
+from flask import Blueprint, request, jsonify, current_app, render_template, session
 import os
 import zipfile
 import shutil
 from werkzeug.utils import secure_filename
+import firebase_admin.auth as auth
 
 upload_routes = Blueprint('upload', __name__)
 
+def get_user_id():
+    """Get current user ID from session or token"""
+    # Check if user is authenticated
+    token = request.cookies.get('token') or request.headers.get('Authorization', '').replace('Bearer ', '')
+    
+    if not token:
+        return None
+        
+    try:
+        # Verify the Firebase token
+        decoded_token = auth.verify_id_token(token)
+        return decoded_token['uid']
+    except Exception as e:
+        print(f"Error verifying token: {e}")
+        return None
+
+def get_user_upload_folder():
+    """Get the upload folder specific to the current user"""
+    user_id = get_user_id()
+    
+    if not user_id:
+        return None
+    
+    # Use the helper from Config
+    from app.config import Config
+    return Config.get_user_folder(user_id)
+
 @upload_routes.route('/', methods=['GET'])
 def upload_page():
-    folder = current_app.config['UPLOAD_FOLDER']
-    files = [f for f in os.listdir(folder) if f.endswith('.py')]
-    return render_template('upload.html' , files=files)
+    # Get user-specific upload folder
+    user_folder = get_user_upload_folder()
+    
+    if not user_folder:
+        # User not authenticated, redirect to login
+        return render_template('upload.html', files=[], error="Please log in to upload files")
+    
+    files = [f for f in os.listdir(user_folder) if f.endswith('.py')]
+    return render_template('upload.html', files=files)
 
 @upload_routes.route('/', methods=['POST'])
 def upload_file():
+    # Get user-specific upload folder
+    user_folder = get_user_upload_folder()
+    
+    if not user_folder:
+        return jsonify({'error': 'Authentication required'}), 401
+
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
@@ -21,19 +61,17 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
-    os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True)
     filename = secure_filename(file.filename)
     file_extension = os.path.splitext(filename)[1].lower()
 
     if file_extension == '.zip':
-        return handle_zip_upload(file)
+        return handle_zip_upload(file, user_folder)
     elif file_extension == '.py':
-        return handle_python_file_upload(file, filename)
+        return handle_python_file_upload(file, filename, user_folder)
     else:
         return jsonify({'error': 'Only Python (.py) or ZIP files are allowed'}), 400
 
-def handle_zip_upload(file):
-    upload_folder = current_app.config['UPLOAD_FOLDER']
+def handle_zip_upload(file, upload_folder):
     temp_zip_path = os.path.join(upload_folder, 'temp.zip')
     temp_extract_dir = os.path.join(upload_folder, 'temp_extract')
     python_files_count = 0
@@ -83,8 +121,7 @@ def move_python_files_from_dir(src_dir, dest_dir):
                 shutil.copy2(original_name, dest_name)
     return python_files_count
 
-def handle_python_file_upload(file, filename):
-    upload_folder = current_app.config['UPLOAD_FOLDER']
+def handle_python_file_upload(file, filename, upload_folder):
     save_path = os.path.join(upload_folder, filename)
     counter = 1
     while os.path.exists(save_path):
