@@ -113,6 +113,10 @@
         background-color: #f8faff;
       }
 
+      .hidden {
+        display: none;
+      }
+
       .list-group-item i {
         color: var(--primary);
         margin-right: 10px;
@@ -476,9 +480,6 @@
             <li class="nav-item">
               <a class="nav-link active" href="/monitoring/">Monitoring</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/history/">History</a>
-            </li>
           </ul>
 
           <div class="ms-auto d-flex align-items-center">
@@ -494,17 +495,17 @@
                 <span id="userName">User</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
-                <li>
+                <li class="hidden">
                   <a class="dropdown-item" href="/profile/"
                     ><i class="bi bi-person me-2"></i>Profile</a
                   >
                 </li>
-                <li>
+                <li class="hidden">
                   <a class="dropdown-item" href="/settings/"
                     ><i class="bi bi-gear me-2"></i>Settings</a
                   >
                 </li>
-                <li><hr class="dropdown-divider" /></li>
+                <li class="hidden"><hr class="dropdown-divider" /></li>
                 <li>
                   <a class="dropdown-item" href="#" id="logout-button"
                     ><i class="bi bi-box-arrow-right me-2"></i>Logout</a
@@ -712,7 +713,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary hidden"
               id="downloadReportBtn"
             >
               <i class="bi bi-download"></i> Download Report
@@ -992,6 +993,10 @@
 
           const data = await response.json();
           console.log("Comparison details:", data);
+
+          // Store the comparison index in modal for report download
+          const modal = document.getElementById('detailModal');
+          modal.dataset.comparisonIndex = index;
 
           const modalContent = document.getElementById("modal-content");
 
@@ -1300,25 +1305,140 @@
         }
       }
 
-      // Export functions (placeholder implementations)
-      function exportToCSV() {
+      // Update the export functions
+      async function exportToCSV() {
         if (!resultsData || resultsData.length === 0) {
           showToast("No results to export", "warning");
           return;
         }
 
-        showToast("Exporting to CSV...", "info");
-        // Here you would implement the CSV export functionality
+        try {
+          showToast("Generating CSV export...", "info");
+          
+          const response = await fetch('/export/csv', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              results: resultsData
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('Export failed');
+          }
+
+          // Get the filename from response headers or create one
+          const contentDisposition = response.headers.get('Content-Disposition');
+          let filename = 'plagiarism_report.csv';
+          if (contentDisposition) {
+            const matches = contentDisposition.match(/filename="(.+)"/);
+            if (matches) {
+              filename = matches[1];
+            }
+          }
+
+          // Download the file
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+
+          showToast("CSV export completed successfully!", "success");
+        } catch (error) {
+          console.error('Export error:', error);
+          showToast("Failed to export CSV", "danger");
+        }
       }
 
-      function exportToPDF() {
+      async function exportToPDF() {
         if (!resultsData || resultsData.length === 0) {
           showToast("No results to export", "warning");
           return;
         }
 
-        showToast("Exporting to PDF...", "info");
-        // Here you would implement the PDF export functionality
+        try {
+          showToast("Generating PDF export...", "info");
+          
+          const response = await fetch('/export/pdf', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              results: resultsData
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('Export failed');
+          }
+
+          // Get the filename from response headers or create one
+          const contentDisposition = response.headers.get('Content-Disposition');
+          let filename = 'plagiarism_report.pdf';
+          if (contentDisposition) {
+            const matches = contentDisposition.match(/filename="(.+)"/);
+            if (matches) {
+              filename = matches[1];
+            }
+          }
+
+          // Download the file
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+
+          showToast("PDF export completed successfully!", "success");
+        } catch (error) {
+          console.error('Export error:', error);
+          showToast("Failed to export PDF", "danger");
+        }
+      }
+
+      // Update the download report function in modal
+      async function downloadDetailedReport(comparisonIndex) {
+        try {
+          showToast("Generating detailed report...", "info");
+          
+          const response = await fetch(`/export/detailed-report/${comparisonIndex}`, {
+            method: 'POST'
+          });
+
+          if (!response.ok) {
+            throw new Error('Report generation failed');
+          }
+
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `detailed_comparison_${comparisonIndex}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+
+          showToast("Detailed report downloaded successfully!", "success");
+        } catch (error) {
+          console.error('Report download error:', error);
+          showToast("Failed to download detailed report", "danger");
+        }
       }
 
       // Event listeners
@@ -1352,8 +1472,10 @@
         document
           .getElementById("downloadReportBtn")
           .addEventListener("click", () => {
-            showToast("Downloading report...", "info");
-            // Implement report download functionality here
+            // Get the current comparison index from modal data
+            const modal = document.getElementById('detailModal');
+            const comparisonIndex = modal.dataset.comparisonIndex || 0;
+            downloadDetailedReport(comparisonIndex);
           });
 
         // Set up view file buttons
