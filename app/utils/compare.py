@@ -44,7 +44,8 @@ def check_plagiarism_from_json(json_path):
                 'euclidean_distance': euclidean_distance,
                 'InputLayer': tf.keras.layers.InputLayer
             },
-            compile=False
+            compile=False,
+            safe_mode=False
         )
 
         embeddings, file_names = load_embeddings(json_path)
