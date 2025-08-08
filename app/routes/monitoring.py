@@ -15,7 +15,9 @@ def monitoring_page():
         # User not authenticated
         return render_template('monitoring.html', files=[])
     
-    files = [f for f in os.listdir(user_folder) if f.endswith('.py')]
+    # Filter out macOS metadata files (._) and get only .py files
+    files = [f for f in os.listdir(user_folder) 
+             if f.endswith('.py') and not f.startswith('._')]
     return render_template('monitoring.html', files=files)
 
 @monitoring_routes.route('/files', methods=['GET'])
@@ -25,7 +27,9 @@ def list_uploaded_files():
     if not user_folder:
         return jsonify({'files': []})
     
-    files = [f for f in os.listdir(user_folder) if f.endswith('.py')]
+    # Filter out macOS metadata files (._) and get only .py files
+    files = [f for f in os.listdir(user_folder) 
+             if f.endswith('.py') and not f.startswith('._')]
     return jsonify({'files': files})
 
 @monitoring_routes.route('/check', methods=['POST'])
@@ -70,11 +74,28 @@ def get_comparison_details(index):
         file1 = result['file_1']
         file2 = result['file_2']
         
-        # Read file contents
-        with open(os.path.join(user_folder, file1), 'r', encoding='utf-8') as f:
-            content_1 = f.read()
-        with open(os.path.join(user_folder, file2), 'r', encoding='utf-8') as f:
-            content_2 = f.read()
+        # Read file contents with fallback encodings
+        def read_file_with_fallback(filepath):
+            encodings = ['utf-8', 'latin1', 'cp1252', 'iso-8859-1']
+            content = None
+            
+            for encoding in encodings:
+                try:
+                    with open(filepath, 'r', encoding=encoding) as f:
+                        content = f.read()
+                    break  # If successful, break the loop
+                except UnicodeDecodeError:
+                    continue  # Try next encoding
+            
+            if content is None:
+                # If all encodings fail, try with replacement character
+                with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
+                    content = f.read()
+            
+            return content
+            
+        content_1 = read_file_with_fallback(os.path.join(user_folder, file1))
+        content_2 = read_file_with_fallback(os.path.join(user_folder, file2))
             
         # Analyze matching blocks
         matching_blocks = analyze_matching_blocks(content_1, content_2)
@@ -105,8 +126,22 @@ def get_file_content(filename):
         if not os.path.exists(file_path):
             return jsonify({'error': 'File not found'}), 404
             
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
+        # Try multiple encodings
+        encodings = ['utf-8', 'latin1', 'cp1252', 'iso-8859-1']
+        content = None
+        
+        for encoding in encodings:
+            try:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    content = f.read()
+                break  # If successful, break the loop
+            except UnicodeDecodeError:
+                continue  # Try next encoding
+        
+        if content is None:
+            # If all encodings fail, use replacement character
+            with open(file_path, 'r', encoding='utf-8', errors='replace') as f:
+                content = f.read()
             
         return jsonify({'content': content})
     except Exception as e:
@@ -121,7 +156,10 @@ def reset():
         return jsonify({'error': 'Authentication required'}), 401
     
     try:
-        # Delete all files in user's upload folder
+        # Clean macOS metadata files first
+        clean_macos_metadata_files(user_folder)
+        
+        # Delete all remaining files in user's upload folder
         for file in os.listdir(user_folder):
             file_path = os.path.join(user_folder, file)
             if os.path.isfile(file_path):
@@ -136,6 +174,17 @@ def reset():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+def clean_macos_metadata_files(folder_path):
+    """Remove macOS metadata files from the given folder"""
+    for filename in os.listdir(folder_path):
+        if filename.startswith('._'):
+            try:
+                file_path = os.path.join(folder_path, filename)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            except Exception as e:
+                current_app.logger.warning(f"Failed to remove metadata file {filename}: {str(e)}")
+
 def analyze_matching_blocks(content_1, content_2):
     """Find matching blocks between two code contents"""
     lines1 = content_1.split('\n')
