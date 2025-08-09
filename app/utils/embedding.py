@@ -15,22 +15,18 @@ def _initialize_model():
     if _tokenizer is not None and _model is not None:
         return
     try:
+        # lazy import agar app bisa boot tanpa transformers/torch terpasang
         from transformers import RobertaTokenizer, RobertaModel
-        import torch
-        # irit CPU
-        try:
-            torch.set_num_threads(1)
-        except Exception:
-            pass
+        import torch  # noqa: F401  # hanya untuk memastikan torch tersedia
 
         _tokenizer = RobertaTokenizer.from_pretrained("microsoft/codebert-base")
         _model = RobertaModel.from_pretrained("microsoft/codebert-base")
-        _model.eval()  # CPU default
+        _model.eval()  # CPU mode default; biarkan di CPU
     except Exception as e:
         raise RuntimeError(f"Failed to initialize model: {e}")
 
 def _iter_python_files(root_dir: str):
-    """Iterasi semua .py (rekursif), skip AppleDouble (._) & hidden (.)"""
+    """Iterasi semua .py, skip AppleDouble/hidden files, dan subfolder."""
     for p in Path(root_dir).rglob("*.py"):
         name = p.name
         if name.startswith("._") or name.startswith("."):
@@ -40,12 +36,12 @@ def _iter_python_files(root_dir: str):
 def _read_text_robust(path: Path) -> str:
     """Baca file dengan fallback encoding; terakhir pakai ignore."""
     data = path.read_bytes()
-    for enc in ("utf-8", "utf-8-sig", "latin-1", "cp1252", "iso-8859-1"):
+    for enc in ("utf-8", "utf-8-sig", "latin-1"):
         try:
             return data.decode(enc)
         except UnicodeDecodeError:
             continue
-    return data.decode("utf-8", errors="replace")
+    return data.decode("utf-8", errors="ignore")
 
 def get_embedding_from_code(code_string: str):
     try:
@@ -54,6 +50,7 @@ def get_embedding_from_code(code_string: str):
         if not code_string or not isinstance(code_string, str):
             raise ValueError("Invalid code input")
 
+        # import lokal agar modul tetap lazy luar fungsi
         import torch
 
         inputs = _tokenizer(
@@ -66,8 +63,10 @@ def get_embedding_from_code(code_string: str):
 
         with torch.no_grad():
             outputs = _model(**inputs)
+            # ambil CLS (token pertama)
             vec = outputs.last_hidden_state[:, 0, :].squeeze().numpy()
 
+        # normalize L2
         norm = np.linalg.norm(vec)
         if norm == 0:
             raise ValueError("Zero embedding detected")
@@ -77,35 +76,27 @@ def get_embedding_from_code(code_string: str):
         current_app.logger.error(f"Embedding error: {e}")
         raise
 
-def extract_and_save_embeddings(
-    folder_path: str,
-    output_json_path: str,
-    user_id: str | None = None,
-    max_files: int = 50,   # <-- batasi default untuk hindari timeout/OOM
-):
+def extract_and_save_embeddings(folder_path: str, output_json_path: str, user_id: str | None = None):
     """
     Extract code embeddings from Python files and save them to a JSON file.
     """
-    user_context = f"for user {user_id}" if user_id else ""
+    user_context = f"for user {user_id}" if user_id else ""  # definisikan di luar try agar aman di except
+
     try:
         current_app.logger.info(f"Extracting embeddings {user_context} from {folder_path}")
 
         if not os.path.exists(folder_path):
             raise FileNotFoundError(f"Folder not found: {folder_path}")
 
-        files = sorted(_iter_python_files(folder_path), key=lambda p: p.name)
-        files = list(files)
+        embeddings_dict: dict[str, dict] = {}
+
+        files = list(_iter_python_files(folder_path))
         if not files:
             raise ValueError(f"No Python files found in the folder {user_context}")
 
-        # terapkan batas file agar request tidak terlalu berat
-        if max_files and max_files > 0:
-            files = files[:max_files]
+        current_app.logger.info(f"Processing {len(files)} Python files {user_context}")
 
-        current_app.logger.info(f"Processing {len(files)} Python files {user_context} (capped by max_files={max_files})")
-
-        embeddings_dict: dict[str, dict] = {}
-
+        # PROSES FILE
         for p in files:
             try:
                 code = _read_text_robust(p)
@@ -116,9 +107,6 @@ def extract_and_save_embeddings(
                         "file_path": str(p),
                         "file_name": p.name,
                     }
-            except MemoryError as me:
-                current_app.logger.error(f"MemoryError on {p.name} {user_context}: {me}")
-                break
             except Exception as e:
                 current_app.logger.error(f"Failed to process {p.name} {user_context}: {e}")
                 continue
@@ -126,6 +114,7 @@ def extract_and_save_embeddings(
         if not embeddings_dict:
             raise ValueError(f"No valid embeddings generated {user_context}")
 
+        # Simpan JSON
         os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
         output_data = {
             "metadata": {
