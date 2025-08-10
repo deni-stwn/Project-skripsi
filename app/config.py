@@ -7,7 +7,7 @@ class Config:
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
     # Model path with fallback
-    MODEL_PATH = os.environ.get('MODEL_PATH') or os.path.join(BASE_DIR, 'app', 'model', 'best_model.h5')
+    MODEL_PATH = os.environ.get('MODEL_PATH') or os.path.join(BASE_DIR, 'app', 'model', 'siamese_model.h5')
     
     # Firebase key path with fallback
     ACCOUNT_KEY_FIREBASE = os.environ.get('FIREBASE_KEY_PATH') or os.path.join(BASE_DIR, 'crud-833c1-firebase-adminsdk-e01ya-b83fe59025.json')
