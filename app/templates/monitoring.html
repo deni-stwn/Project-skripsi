@@ -701,7 +701,6 @@
             ></button>
           </div>
           <div class="modal-body" id="modal-content">
-            <!-- Content will be dynamically loaded -->
           </div>
           <div class="modal-footer">
             <button
@@ -745,7 +744,6 @@
       </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -754,7 +752,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
 
     <script>
-      // Initialize AOS
       AOS.init({
         duration: 800,
         easing: "ease-in-out",
@@ -1013,14 +1010,14 @@
             severityText = "Medium";
           }
 
+          // <div class="alert alert-primary d-flex align-items-center" role="alert">
+          //   <i class="bi bi-info-circle-fill me-2"></i>
+          //   <div>
+          //     <strong>Similarity Analysis:</strong> ${similarityValue}% similarity detected - <span class="${severityClass}">${severityText} Risk of Plagiarism</span>
+          //   </div>
+          // </div>
           modalContent.innerHTML = `
         <div class="mb-4">
-          <div class="alert alert-primary d-flex align-items-center" role="alert">
-            <i class="bi bi-info-circle-fill me-2"></i>
-            <div>
-              <strong>Similarity Analysis:</strong> ${similarityValue}% similarity detected - <span class="${severityClass}">${severityText} Risk of Plagiarism</span>
-            </div>
-          </div>
           
           <div class="row mb-4">
             <div class="col-md-6">

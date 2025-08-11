@@ -3,6 +3,8 @@ import os
 from app.utils.embedding import extract_and_save_embeddings
 from app.routes.upload import get_user_id, get_user_upload_folder
 from app.config import Config
+from app.utils.compare import check_plagiarism_from_json
+    
 
 monitoring_routes = Blueprint('monitoring', __name__)
 
@@ -26,14 +28,12 @@ def list_uploaded_files():
     if not user_folder:
         return jsonify({'files': []})
     
-    # Filter out macOS metadata files (._) and get only .py files
     files = [f for f in os.listdir(user_folder) 
              if f.endswith('.py') and not f.startswith('._')]
     return jsonify({'files': files})
 
 @monitoring_routes.route('/check', methods=['POST'])
 def check():
-    from app.utils.compare import check_plagiarism_from_json
     user_id = get_user_id()
     user_folder = get_user_upload_folder()
     
